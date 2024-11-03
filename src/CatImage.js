@@ -1,18 +1,9 @@
-import { Route, Routes } from "react-router-dom";
-import CatGallery from "./CatImage";
-//import { orderlists } from './order/component/PostOrder'
-import Header from "./Header";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import logo from './image/cat.jpg'
-import OrderElement from "./order/OrderElement";
-import OrderPage from "./order/component/OrderPage";
-import Cart from "./order/Page/Cart";
-import axios from "axios";
 
-function App() {
-
-
-    const [orders, setOrders] = useState()
+const CatGallery = () => {
+    const [cats, setCats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(true);
 
@@ -20,7 +11,7 @@ function App() {
             setLoading(true);
             try {
                 const response = await axios.get('https://api.thecatapi.com/v1/images/search?limit=10');
-                setOrders(response.data);
+                setCats(response.data);
             } catch (err) {
               setError('Error fetching cat images');
             } finally {
@@ -50,19 +41,22 @@ function App() {
 
 
 
+  const content = <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-around' }}>
+  {cats.map(cat => (
+      <div key={cat.id} style={{ margin: '10px' }}>
+          <img src={cat.url} alt="Cat" className='sm:w-80 w-72 h-60 rounded-xl ' />
+      </div>
+  ))}
+</div>
+    return (
+        <div>
+            <div className='flex flex-row justify-around items-center'>
+     <      h1 className="my-4  font-bold text-3xl">View Your Cat Picture</h1>
+            <button onClick={fetchCats} className='bg-green-400 text-white rounded-xl p-2 '>Refresh</button>
+            </div>
+            {content}
+        </div>
+    );
+};
 
-
-  return (
-    <div className="">
-      <Header />
-      <Routes>
-      <Route path="/" element={ <CatGallery />} />
-      <Route path="/favorite" element={ <OrderElement orders={orders} setOrders={setOrders}/>} />
-      <Route path="/order/:id" element={ <OrderPage />} />
-      <Route path="/cart" element={ <Cart />} />
-     </Routes>
-    </div>
-  );
-}
-
-export default App;
+export default CatGallery;

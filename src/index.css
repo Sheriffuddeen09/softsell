@@ -1,13 +1,105 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
+:root{
+    --body_background: blue;
+    --body_backtoggle: white;
+    --body_color: white;
+    --body_icon: white;
+    --body_nav: rgb(25, 22, 217);
+    --icon:black;
+    --iconb:white;
+  }
+ 
+  [dark-theme="dark"]{
+    --body_backtoggle: #626267;
+    --body_background: white;
+    --body_color: white;
+  
+    --body_icon: white;
+    --icon:white;
+    --iconb:black;
+  
+  
+  }
+  body{
+    background-color: #17191c;
+  }
+
+  .loading{
+    content: '';
+    display: block;
+    width: 100px;
+    height: 2px;
+    background-color: green;
+    border: 2px solid rgb(83, 83, 84);
+    animation: rotat 2s ease-in-out infinite;
+  }
+  @keyframes rotat {
+  
+    from {
+      transform: translateX(0px);
+    }
+  
+    to{
+      transform: translateX(60px);
+    }
+  }
+
+  .image{
+    position: relative;
+  }
+  .image::after{
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    height: 2px;
+    width: 70%;
+    left: 8px;
+    background-color: white;
+    transition: 0.3s ease-in-out;
+    transform: scaleX(0);
+  }
+  .image:hover::after{
+    transform: scaleX(1);
+    
+  }
+
+  .favorite{
+    position: relative;
+  }
+  .favorite::after{
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    height: 2px;
+    width: 78%;
+    left: 8px;
+    background-color: white;
+    transition: 0.3s ease-in-out;
+    transform: scaleX(0);
+  }
+  .favorite:hover::after{
+    transform: scaleX(1);
+    
+  }
+
+  .save{
+    position: relative;
+  }
+  .save::after{
+    content: '';
+    position: absolute;
+    bottom: 6px;
+    height: 2px;
+    width: 65%;
+    left: 8px;
+    background-color: white;
+    transition: 0.3s ease-in-out;
+    transform: scaleX(0);
+  }
+  .save:hover::after{
+    transform: scaleX(1);
+    
+  }
