@@ -28,8 +28,8 @@ const CatGallery = () => {
 
     return (
         <div>
-            <div className='flex flex-row justify-around items-center'>
-     <      h1 className="my-4  font-bold text-3xl text-white">View Your Cat Picture</h1>
+            <div className='flex flex-row justify-around items-center mx-3'>
+     <      h1 className="my-4  font-bold sm:text-4xl text-xl text-white">View Your Cat Picture</h1>
             <button onClick={fetchCats} className={`bg-green-400 text-white rounded-xl p-2 ${error ? "hidden" : "block"}`}>Refresh</button>
             </div>
             {loading && <div className="flex flex-col items-center justify-center my-56">
