@@ -50,8 +50,8 @@ function Favorite (){
             {
                 data.map(cat =>(
                     <div>
-                        <img src={cat.url} alt="cat-image" width={300} height={300} className="rounded-xl sm:w-72 sm:h-72 w-40 h-40"/>
-                        <button className="text-white bg-orange-600 rounded-xl p-2 w-40 flex justify-center  items-center justify-items-center mx-auto my-3" onClick={() => handleFavorite(cat)}>{favorite.some(fav => fav.id === cat.id) ? "Unfavorite" : "Favorite" }</button>
+                        <img src={cat.url} alt="cat-image" width={300} height={300} className="rounded-xl sm:w-72 sm:h-72 w-48 h-40"/>
+                        <button className="text-white bg-orange-600 text-sm rounded-xl p-2 w-40 flex justify-center  items-center justify-items-center mx-auto my-3" onClick={() => handleFavorite(cat)}>{favorite.some(fav => fav.id === cat.id) ? "Unfavorite" : "Add to Favorite" }</button>
                     </div>
                 ))
             }
@@ -91,7 +91,7 @@ function Favorite (){
             
             </div>
             <div className="p-2 border border-white border-r-0 border-l-2 border-t-0 border-b-0">
-                <h1 className="text-white sm:text-4xl text-xl">Add to Favorite</h1>
+                <h1 className="text-white sm:text-4xl text-xl">Favorite</h1>
             {favorites}
             </div>
         </section>
