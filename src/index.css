@@ -103,3 +103,8 @@
     transform: scaleX(1);
     
   }
+  :disabled{
+    background-color: rgb(134, 133, 133);
+    color: white;
+    border: none;
+   }
