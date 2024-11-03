@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import logo from './image/cat.jpg'
 
-const CatGallery = () => {
+const CatGallerys = () => {
     const [cats, setCats] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(true);
@@ -59,4 +59,4 @@ const CatGallery = () => {
     );
 };
 
-export default CatGallery;
+export default CatGallerys;
