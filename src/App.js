@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
-import CatGallery from "./Catfetch";
 import Header from "./Header";
-import Favorite from "./Favorite";
+import Home from "./home/Home";
 
 
 function App() {
@@ -13,9 +12,7 @@ function App() {
       <Header />
     <div>
       <Routes>
-          <Route path="/" element={
-          <CatGallery />} />
-          <Route path="/favorite" element={<Favorite />} />      
+        <Route path="/" element={ <Home />} />
       </Routes>
     </div>
     </div>
