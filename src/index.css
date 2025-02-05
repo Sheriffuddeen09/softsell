@@ -26,89 +26,121 @@
   body{
     background-color: white;
   }
-  .w-i{
-    width: 0.2px;
+  .submit-bg{
+    background-color: rgb(32, 188, 126);
   }
-  .input-radius{
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+  :disabled{
+    background-color: #dedede;
   }
-  .categories-radius{
-    border-top-left-radius: 20px;
-    border-bottom-left-radius: 20px;
-    border-bottom:  0.5px solid gray;
-    border-top: 0.5px solid gray;
-    border-left: 0.5px solid gray;
-    font-size: 13px;
-    padding: 10.6px 15px;
+  .head{
+    background-color: #20bc7e;
   }
-  ::placeholder{
-    font-size: 14px;
-    color: black;
+  .trans{
+    background-color: rgb(0, 0, 0, .7);
+    z-index: 1000;
   }
-  .categories-border{
-    border-right: 0.5px solid gray;
-    border-left: 0.5px solid gray;
+  .home{
+    background-color: rgb(222, 47, 34);
+    content: '';
+    height: 4px;
+    translate: 0px;
+    position: relative;
+    top: 2.5px;
   }
-  .prev,
-  .next {
-    position: fixed;
-    top: 250px;
-    width: 1.25rem;
-    height: 1.25rem;
-    display: inline-flex;
-    translate: -50px;
-    place-items: center;
-    border-color: transparent;
-    font-size: 1rem;
-    cursor: pointer;
+  .shop{
+    background-color: rgb(222, 47, 34);
+    content: '';
+    height: 4px;
+    translate: 0px;
+    position: relative;
+    top: 2.5px;
   }
-  .prev:hover,
-  .next:hover {
-    background: rgb(73, 73, 91);
-    border-radius: 20px;
+  .about{
+    background-color: rgb(222, 47, 34);
+    content: '';
+    height: 4px;
+    translate: 0px;
+    position: relative;
+    top: 2.5px;
   }
-  .prev{
-    left: 80px;
+  .blogs{
+    background-color: rgb(222, 47, 34);
+    content: '';
+    height: 4px;
+    translate: 0px;
+    position: relative;
+    top: 2.5px;
   }
-  .next {
-    right: 125px;
+  .help{
+    background-color: rgb(222, 47, 34);
+    content: '';
+    height: 4px;
+    translate: 0px;
+    position: relative;
+    top: 2.5px;
   }
-  .prev,
-  .next {
-    width: 2rem;
-    height: 2rem;
-    font-size: 1.5rem;
-    color: white;
+  .user{
+    color: red;
   }
-article {
-  position: fixed;
-  top: 0px;
-  background-color: green;
-  left: 150px;
-  height: 100%;
-  opacity: 0;
-  transition: var(--transition);
-}
+  .cart{
+    color: red;
+    background-color: #20daaf;
+  }
 
-article.activeSlide {
-  opacity: 1;
-  transform: translateX(0);
-}
-article.lastSlide {
-  transform: translateX(-100%);
-}
-article.nextSlide {
-  transform: translateX(100%);
-}
+  @media (min-width: 310px) {
+    .read{
+      width: 280px;
+      font-size: 12px;
+     }
+     .bring{
+      font-size: 12px;
+      width: 286px;
 
-main.activeSlide {
-  opacity: 1;
-  transform: translateX(0);
-}
-main.lastSlide {
-  transform: translateX(-100%);
-}
-main.nextSlide {
-  transform: translateX(100%);
-}
+    }
+    .wid{
+      width: 300px;
+    }
+  }
+
+  .bg-image {
+    background-image: url('/public/image/pexels-renya-sh-3464464-11312080\ 1.png'); /* Make sure the path is correct */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 80vh;
+    margin-top: 0px;
+  }
+  .bg-footer {
+    background-image: url('/public/image/background.png'); /* Make sure the path is correct */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 50vh;
+    margin-top: 0px;
+  }
+  .bg-contact {
+    background-image: url('/public/image/background.png'); /* Make sure the path is correct */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 80vh;
+    margin-top: 0px;
+  }
+  
+  @media (min-width: 768px) {
+    .read{
+     width: 350px;
+     font-size: 12px;
+    }
+    .bring{
+      font-size: 11px;
+      width: 380px;
+    }
+    .wid{
+      width: 550px;
+    }
+    .widt{
+      width: 500px;
+    }
+  }
+  
