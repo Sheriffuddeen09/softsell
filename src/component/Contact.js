@@ -5,6 +5,7 @@ import imageone from './image/Frame 129.png'
 import logoone from './image/Vector (1).png'
 import logotwo from './image/Vector (2).png'
 import logothree from './image/Vector.png'
+import { GoogleMap, LoadScript, Marker } from "@react-google-maps/api";
 
 function Contact (){
 
@@ -84,13 +85,13 @@ function Contact (){
     };
     
     const map = (
-      <div></div>
-        // <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
-        //   <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={12}>
-        //     {/* Marker at London Eye */}
-        //     <Marker position={center} />
-        //   </GoogleMap>
-        // </LoadScript>
+      
+        <LoadScript googleMapsApiKey="YOUR_GOOGLE_MAPS_API_KEY">
+          <GoogleMap mapContainerStyle={containerStyle} center={center} zoom={12}>
+            {/* Marker at London Eye */}
+            <Marker position={center} />
+          </GoogleMap>
+        </LoadScript>
       );
     
     const content =  (
@@ -166,6 +167,7 @@ function Contact (){
             <img src={imageone} alt="imagepicture" className="sm:block hidden w-full" style={{height:"550px"}}/>
             <img src={imageone} alt="imagepicture" className=" w-full block sm:hidden" style={{height:"240px"}}/>
             {content}
+            {map}
         </div>
       )
 }
