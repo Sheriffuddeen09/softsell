@@ -1,4 +1,4 @@
-import FacebookLogin from "react-facebook-login-lite";
+import FacebookLogin from 'react-facebook-login';
 
 function Facebook() {
   const responseFacebook = (response) => {

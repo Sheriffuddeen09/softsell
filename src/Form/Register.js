@@ -14,11 +14,18 @@ const RegisterPage = () =>{
         lastname: "",
         email: "",
         password: "",
+        phone:'',
+        profile_image:null
       });
       const [message, setMessage] = useState("");
-      const [errors, setErrors] = useState({server: "",
-                                            password: "",});
+      const [errors, setErrors] = useState({
+                                            server: "",
+                                            password: ""
+                                        });
     const [loading, setLoading] = useState(false)
+    const [imageFile, setImageFile] = useState(null)
+    const [image, setImage] = useState(null)
+
     const navigate = useNavigate()
 
     useEffect(() => {
@@ -26,47 +33,50 @@ const RegisterPage = () =>{
 
     }, [])
 
+
+
     const handleChange = (e) => {
-        const { name, value } = e.target;
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+      };
     
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: value,
-        }));
-    };
+      const handleImageChange = (e) => {
+        setImageFile(e.target.files[0])
+        setImage(e.target.files[0])
+      };
+       
+    
+
     
     
    const handleSubmit = async (e) =>{
-    e.preventDefault()
-    console.log(formData.email, formData.password, formData.firstname, formData.lastname)
+
+    console.log(formData.email, formData.password, formData.firstname, formData.lastname, formData.phone)
     setLoading(true)
-
-    if (formData.password.length < 8) {
-        setMessage(prev => ({...prev,password:"Password must be at least 8 characters long."}));
-        setLoading(false);
-        return;
-    }
-
-    try{
-        const response = await Api.post("http://localhost/source_code/register.php",
-            JSON.stringify({
-                email: formData.email,
-                firstname: formData.firstname, 
-                lastname: formData.lastname,
-                password: formData.password, 
-                }),
-                {
-                    headers: { "Content-Type": "application/json" },
-                    withCredentials: true,
-                }
-            );
         
+        const formDataToSend = new FormData();
+        formDataToSend.append("firstname", formData.firstname);
+        formDataToSend.append("lastname", formData.lastname);
+        formDataToSend.append("email", formData.email);
+        formDataToSend.append("password", formData.password);
+        formDataToSend.append("phone", formData.phone);
+        if (image) {
+          formDataToSend.append("profile_image", image);
+        }
+    
+        try {
+          const response = await Api.post("/register.php", formDataToSend, {
+            headers: { "Content-Type": "multipart/form-data" },
+          });
+        
+          setMessage(response.data.message);
         console.log(JSON.stringify(response?.data))
         setFormData({
         email:'',
         firstname:'',
         lastname:'',
-        password:''
+        password:'',
+        phone:'',
+        profile_image:null
     })
     navigate('/dashboard')
     setErrors({})
@@ -157,6 +167,22 @@ const RegisterPage = () =>{
                     autoComplete="off"
                     />
                 </div>
+                <div className="">
+                    <p className="text-sm font-roboto sm:text-sm font-bold -mb-5 text-black font-Cambria">
+                        Phone Number:
+                    </p>
+                    <br />
+                    <input 
+                    className="border-2 border-green-200 w-64 sm:w-80 px-2 p-1 rounded-lg text-black outline-none"
+                    type="text"
+                    required
+                    id="phone"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    />
+                </div>
                     <div className="">
                     <p className="text-sm font-roboto font-bold -mb-5 text-black ">
                         Password:
@@ -177,10 +203,53 @@ const RegisterPage = () =>{
                     onChange={handleChange}
                     />
                     </div>
-                   
-                    </div>
+                   <div className="mt-5 border rounded border-2 border-green-500 p-2 flex justify-center items-center">
+                    <label
+                  htmlFor="image"
+                  className="btn btn-outline-secondary d-flex align-items-center"
+                  style={{
+                    cursor: "pointer",
+                    display: "inline-flex",
+                    gap: "10px",
+                  }}
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth="1.5"
+                    stroke="black"
+                    className="border text-green-500 border-green-700 rounded-full "
+                    style={{ width: "24px", height: "24px", color:"green" }}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M12 4.5v15m7.5-7.5h-15"
+                    />
+                  </svg>
+                  <span style={{ color: "green", fontWeight: "bold" }}>
+                   Choose Profile
+                  </span>
+                </label>
+                <input
+                  type="file"
+                  id="image"
+                  onChange={handleImageChange}
+                  className="form-control"
+                  accept="image/*"
+                  style={{ display: "none" }} />
+
+                </div>
+            </div>
+            {imageFile && (
+                  <div className="mt-4 text-black font-bold text-sm">
+                    Selected file: <small>{imageFile.name}</small>
+                  </div>
+                )}
+            
                 <button type="submit"  className="mb-3 w-64 mt-5 submit-bg text-white sm:w-80 p-1 rounded-2xl text-black outline-none"
-                     disabled={!formData.email || !formData.password || !formData.firstname || !formData.lastname}>
+                     disabled={!formData.email || !formData.password || !formData.firstname || !formData.lastname || !formData.phone}>
                 {loading ? "Sending" : "Send"}
                 </button>
             </form>

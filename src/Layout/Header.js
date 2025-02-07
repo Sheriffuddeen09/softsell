@@ -15,16 +15,16 @@ function Header (){
         <header className="bg-white">
     <div class="head font-roboto text-center text-sm sm:block hidden text-white p-1 -mb-2 ">Special Discount Alert: Flat 20% Off on Your Rental Needs!</div>
     <div class="head font-roboto text-center sm:hidden block text-white p-1 -mb-2 " style={{fontSize:"8px"}}>Special Discount Alert: Flat 20% Off on Your Rental Needs!</div>
-    <div class="flex flex-row justify-between items-center shadow-md">
-      <div class="inline-flex gap-6 items-center">
+    <div class="flex flex-row justify-between items-center p-1 shadow-md">
+      <div class="inline-flex sm:gap-6 items-center">
         <span>
-          <img src={logo} alt="" class="w-32 sm:h-20 h-16 mt-2" />
+          <img src={logo} alt="" class="w-20 sm:h-20 sm:h-12 h-10 mt-2" />
         </span>
         <div class="sm:block hidden">
         <ul class="inline-flex gap-6 mt-4 text-sm ">
-          <Link to="/home" class={` hover:bg-gray-100 px-2 py-1 rounded `}>
+          <Link to="/" class={` hover:bg-gray-100 px-2 py-1 rounded `}>
           <p>Home</p>
-          <div className={`${homepage === '/home' ? 'home' : ''}`}></div>
+          <div className={`${homepage === '/' ? 'home' : ''}`}></div>
           </Link>
 
           <Link to="/shop" class={` hover:bg-gray-100 px-2 py-1 rounded`}>
@@ -54,8 +54,8 @@ function Header (){
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-10 hover:bg-gray-100 px-2 py-1 rounded-full">
         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
       </svg>
-      <Link to={'/user'}>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class={`size-10 hover:bg-gray-100 px-2 py-1 rounded-full ${` ${homepage === '/user' ? 'user' : null}`}`}>
+      <Link to={'/dashboard'}>
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class={`size-10 hover:bg-gray-100 px-2 py-1 rounded-full ${` ${homepage === '/dashboard' ? 'user' : null}`}`}>
         <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
       </svg>
       </Link>
@@ -79,19 +79,19 @@ function Header (){
             </svg>
             </div>
         <div className="flex flex-col gap-4 ">
-        <Link to={'/home'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Home</p></Link>
+        <Link to={'/'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Home</p></Link>
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
-        <Link to={'/home'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Shop</p></Link>
+        <Link to={'/shop'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Shop</p></Link>
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
-        <Link to={'/home'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Category</p></Link>
+        <Link to={'/category'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Category</p></Link>
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
-        <Link to={'/home'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">About</p></Link>
+        <Link to={'/about'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">About</p></Link>
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
-        <Link to={'/home'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Blogs</p></Link>
+        <Link to={'/blogs'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Blogs</p></Link>
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
-        <Link to={'/home'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Help Center</p></Link>
+        <Link to={'/help'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">Help Center</p></Link>
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
-        <Link to={'/home'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">country</p></Link>
+        <Link to={'/country'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded">country</p></Link>
         </div>
         </div>
   </div>
