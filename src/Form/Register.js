@@ -78,7 +78,7 @@ const RegisterPage = () =>{
         phone:'',
         profile_image:null
     })
-    navigate('/dashboard')
+    navigate('/login')
     setErrors({})
     }
     catch (err) {
@@ -279,7 +279,6 @@ const RegisterPage = () =>{
 
     return (
         <div className="overflow-hidden">
-            <Header />
          {content}
         </div>
         

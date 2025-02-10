@@ -170,7 +170,6 @@ const LoginPage = () =>{
 
     return (
         <div className="overflow-hidden">
-        <Header />
          {content}
         </div>
         

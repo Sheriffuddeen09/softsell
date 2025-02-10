@@ -103,7 +103,6 @@ function Blogs (){
 
     return (
         <div>
-            <Header />
             {content}
         </div>
     )

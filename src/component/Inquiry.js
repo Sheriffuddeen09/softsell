@@ -117,7 +117,6 @@ function Inquiry (){
 
       return (
         <div>
-            <Header />
             {content}
         </div>
       )

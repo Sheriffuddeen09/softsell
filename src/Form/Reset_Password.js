@@ -102,7 +102,6 @@ const ResetPassword = () =>{
 
     return (
         <div className="overflow-hidden">
-        <Header />
          {content}
         </div>
         

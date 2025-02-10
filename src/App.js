@@ -13,16 +13,76 @@ import Footer from "./Layout/Footer";
 import Inquiry from "./component/Inquiry";
 import Contact from "./component/Contact";
 import HomePage from "./component/HomePage";
-import Cart from "./shop/Cart";
+import Cart from "./cart/Cart";
+import EditProfile from "./Form/EditProfile";
+import Category from "./category/Category";
+import Header from "./Layout/Header";
+
+import { useEffect, useState } from "react"
+import { Api } from "./api/axios";
+
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 
+   
 function App() {
 
+  useEffect(() =>{
+    AOS.init({duration: 2000})
+}, [])
 
+
+  const categories = [ {title:"Dogs"},{title:"Cats"}, {title:"Pet Clothing"},{title:"Pet Carriers"},{title:"Dog & Cat Beds"}];
+
+
+  const [products, setProducts] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState("All");
+    const [error, setError] = useState({})
+    const [loading, setLoading] = useState(false)
+
+
+    const fetchProduct = async (category = '') =>{
+
+      setError({})
+      setLoading(true)
+      
+      let url = '/category.php'
+
+      if (category && category !== 'All'){
+        url += `?category=${encodeURIComponent(category)}`
+      }
+      setError({})
+      setLoading(true)
+        try{
+          const response = await Api.get(url)
+          if(Array.isArray(response.data.message)){
+            setProducts(response.data.message)
+          }
+          else{
+            setProducts([])
+          }
+        }
+        catch (error) {
+          console.error("Error Display Products", error);
+          }
+        finally{
+          setLoading(false)
+        }   
+    }
+    useEffect(() => {
+    fetchProduct()
+  }, []);
+
+  const handleAddToCart = (product) => {
+    console.log("Added to cart:", product);
+    // Add logic to store product in localStorage or global state
+  };
 
 
   return (
     <div className="">
+      <Header fetchProduct={fetchProduct} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} />
       <Routes>
 
         {/* register */}
@@ -70,6 +130,20 @@ function App() {
         </Protected>
       } />
 
+      {/* Category */}
+      <Route path="/category" element={
+        <Protected>
+        <Category products={products} loading={loading} />
+        </Protected>
+      } />
+
+
+      {/* EditProfile */}
+      <Route path="/edit" element={
+        <Protected>
+        <EditProfile />
+        </Protected>
+      } />
       {/* reset */}
       <Route path="/reset" element={
        

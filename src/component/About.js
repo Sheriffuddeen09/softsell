@@ -88,7 +88,6 @@ function About (){
 
     return (
         <div>
-            <Header />
             {content}
         </div>
     )

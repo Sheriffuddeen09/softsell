@@ -195,7 +195,6 @@ const ChangeResetPassword = () =>{
 
     return (
         <div className="overflow-hidden">
-        <Header />
          {content}
         </div>
         

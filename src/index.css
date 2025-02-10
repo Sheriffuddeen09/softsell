@@ -53,6 +53,16 @@
     position: relative;
     top: 2.5px;
   }
+
+  .category{
+    background-color: rgb(222, 47, 34);
+    content: '';
+    height: 4px;
+    translate: 0px;
+    position: relative;
+    top: 2.5px;
+    width: 55px;
+  }
   .shop{
     background-color: rgb(222, 47, 34);
     content: '';
@@ -199,6 +209,13 @@
     min-height: 60vh;
     margin-top: 0px;
   }
+  .bg-homepage {
+    background-image: url('/public/image/happy4.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 90vh;
+    margin-top: 10px;
+  }
 
   .scrollb{
     scroll-snap-type: mandatory;
@@ -206,4 +223,8 @@
   }
   .sma{
     font-size: 9px;
+  }
+
+  .smal{
+    font-size: 12px;
   }

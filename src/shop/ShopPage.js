@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { Api } from "../api/axios"
-import axios from "axios";
 import Header from "../Layout/Header";
 import Iconone from './image/Cat--Streamline-Font-Awesome 1.png'
 import Icontwo from './image/Untitled design (14) 1.png'
@@ -26,7 +25,11 @@ function ShopPage (){
       setError({})
       setLoading(true)
       
-      const url = category === 'All' ? "/product.php" : `${`/product.php?category=${category}`}`
+      let url = '/product.php'
+
+      if (category && category !== 'All'){
+        url += `?category=${encodeURIComponent(category)}`
+      }
       setError({})
       setLoading(true)
         try{
@@ -90,8 +93,8 @@ function ShopPage (){
             key={category}
             className={selectedCategory === category ? "w-52 border border-pink-400 shadow-md whitespace-nowrap sma font-bold flex flex-col justify-center items-center mx-auto bg-pink-500 hover:bg-gray-200 hover:text-black  h-16 text-white px-4  rounded" : "flex flex-col justify-center items-center sma font-bold whitespace-nowrap mx-auto px-3  h-16 rounded border hover:bg-gray-200 hover:text-black w-52 border border-pink-400 shadow-md"}
             onClick={() => {
-              setSelectedCategory(category);
-              fetchProduct(category);
+              setSelectedCategory(category.title);
+              fetchProduct(category.title);
             }}
           >
             <img src={category.icon} alt="icon" className="h-6 sm:h-8"/>
@@ -104,7 +107,6 @@ function ShopPage (){
 
   return (
     <div>
-      <Header />
       <div className="flex flex-col items-center justify-center w-full">
       <div className="inline-flex items-center justify-items-center gap-3 justify-center mx-auto">
       {categorylist}

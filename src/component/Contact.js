@@ -163,7 +163,6 @@ function Contact (){
 
       return (
         <div>
-            <Header />
             <img src={imageone} alt="imagepicture" className="sm:block hidden w-full" style={{height:"550px"}}/>
             <img src={imageone} alt="imagepicture" className=" w-full block sm:hidden" style={{height:"240px"}}/>
             {content}
