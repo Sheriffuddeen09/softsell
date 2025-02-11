@@ -116,6 +116,27 @@
     .wid{
       width: 300px;
     }
+    .show-content{
+      display: block;
+      width: 200px;
+    }
+    .content{
+      display: none;
+    }
+    .id-width{
+      width: 290px;
+    }
+    .id-wid{
+      width: 290px;
+      font-size: 12px;
+      text-align: justify;
+    }
+    .id-h{
+      font-size: 15px;
+    }
+    .width-leght{
+      width: 290px;
+    }
   }
 
   .bg-image {
@@ -200,8 +221,44 @@
     .widt{
       width: 500px;
     }
+    .show-content{
+      display: block;
+      width: 500px;
+    }
+    .content{
+      display: none;
+    }
+    .id-width{
+      width: 600px;
+    }
+    .id-wid{
+      width: 630px;
+      font-size: 12px;
+    }
+    .id-h{
+      font-size: 15px;
+    }
+    .select{
+
+      background-color: #D2016A;
+      display: block;
+      width: 100%;
+      height: 2px;
+      position: relative;
+      z-index: 1000px;
+      
+      isolation: isolate;
+      content: '';
+    }
+    .width-leght{
+      width: 88%;
+    }
   }
   
+  .selecte{
+    color: #D2016A;
+
+  }
   .bg-profile {
     background-image: url('/public/image/Untitled\ design\ \(10\)\ 2.png');
     background-position: center;
@@ -228,3 +285,4 @@
   .smal{
     font-size: 12px;
   }
+  

@@ -23,6 +23,7 @@ import { Api } from "./api/axios";
 
 import AOS from 'aos'
 import 'aos/dist/aos.css'
+import ShopPageId from "./shop/ShopPageId";
 
 
    
@@ -101,6 +102,13 @@ function App() {
       <Route path="/shop" element={
         <Protected>
           <ShopPage />
+        </Protected>
+      } />
+
+      {/* shoppage */}
+      <Route path="/shop/:id" element={
+        <Protected>
+          <ShopPageId />
         </Protected>
       } />
 

@@ -1,19 +1,22 @@
 import { useEffect, useState } from "react"
 import { Api } from "../api/axios"
 
-const cartimage='http://localhost/source_code/product.php'
+const cartimage='http://localhost/source_code/image'
 
 function Cart (){
 
     const [cart, setCart ] = useState([])
     const [error, setError] = useState(false)
     const [loading, setLoading] = useState(false)
+
+    const userId = localStorage.getItem("user_id");
+
     const fetchCart = async () =>{
 
         try{
-            const response = await Api.get('/cart.php') 
+            const response = await Api.get(`/cart.php?user_id=${userId}`) 
             if(response.data.success){
-              setCart(response.data.message)
+              setCart(response.data)
             }
             else{
               setCart([])

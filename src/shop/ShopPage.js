@@ -7,6 +7,7 @@ import Iconthree from './image/Untitled design (15) 1.png'
 import Iconfour from './image/Vector (10).png'
 import Iconfive from './image/Vector (11).png'
 import Iconsix from './image/Vector (12).png'
+import { Link } from "react-router-dom";
 
 const productUrl = 'http://localhost/source_code/image/'
 
@@ -32,19 +33,19 @@ function ShopPage (){
       }
       setError({})
       setLoading(true)
-        try{
-          const response = await Api.get(url)
-          if(Array.isArray(response.data.message)){
-            setProducts(response.data.message)
-          }
-          else{
-            setProducts([])
-          }
+      try {
+        const response = await Api.get(url);
+        console.log("API Response:", response.data); // Debugging
+      
+        if (Array.isArray(response.data.message)) {
+          setProducts(response.data.message);
+        } else {
+          setProducts([]);
         }
-        catch (error) {
-          console.error("Error Display Products", error);
-          }
-        finally{
+      } catch (error) {
+        console.error("Error Display Products", error);
+      }
+         finally{
           setLoading(false)
         }   
     }
@@ -62,6 +63,7 @@ function ShopPage (){
       { loading ? (
         <p>Loading Product</p>
       ) : products.length > 0 ?(products.map((product) => (
+        <Link to={`/shop/${product.id}`}>
         <div className="relative  group">
         <div key={product.id} className="border p-4 shadow-lg sm:w-80 w-72 relative">
           <img
@@ -81,6 +83,7 @@ function ShopPage (){
         </div>
       <div className="absolute inset-0 bg-black bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl "></div>
         </div>
+        </Link>
       ))) : (<p>No Products to display</p>)}
     </div>
   );
