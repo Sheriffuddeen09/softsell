@@ -1,66 +1,261 @@
-import { useEffect, useState } from "react"
-import { Api } from "../api/axios"
+import { useEffect, useState } from "react";
+import { Api } from "../api/axios";
+import paypal from './images/paypal.png'
+import googlepay from './images/googlepay.png'
+import visa from './images/visa.png'
+const productUrl = "http://localhost/source_code/image/";
+//const stripePromise = loadStripe("YOUR_STRIPE_PUBLIC_KEY");
 
-const cartimage='http://localhost/source_code/image'
+function Cart() {
+  const [cart, setCart] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [selectedLocations, setSelectedLocations] = useState([]);
+  const [searchLocation, setSearchLocation] = useState("");
+  const [selectedDurations, setSelectedDurations] = useState([]);
+  const [selectedPayment, setSelectedPayment] = useState("");
 
-function Cart (){
 
-    const [cart, setCart ] = useState([])
-    const [error, setError] = useState(false)
-    const [loading, setLoading] = useState(false)
-
+  const fetchCart = async () => {
     const userId = localStorage.getItem("user_id");
+    try {
+      setLoading(true);
+      const response = await Api.get(`/cart.php?user_id=${userId}`);
+      if (response.data.success) {
+        setCart(response.data.cart);
+      } else {
+        setCart([]);
+      }
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    const fetchCart = async () =>{
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
-        try{
-            const response = await Api.get(`/cart.php?user_id=${userId}`) 
-            if(response.data.success){
-              setCart(response.data)
-            }
-            else{
-              setCart([])
-            }
-          }
-          catch (error) {
-            console.error("Error Display Products", error);
-            }
-          finally{
-            setLoading(false)
-          }   
-        }   
 
-    useEffect(() =>{
-        fetchCart()
-    },[])
 
+  // const handleStripePayment = async () => {
+  //     const stripe = await stripePromise;
+  //     const { error } = await stripe.redirectToCheckout({
+  //         lineItems: [{ price: "price_id", quantity: 1 }],
+  //         mode: "payment",
+  //         successUrl: "http://localhost:3000/order-history",
+  //         cancelUrl: "http://localhost:3000/cart",
+  //     });
+
+  //     if (error) {
+  //         console.error("Stripe Error:", error);
+  //     }
+  // };
+
+  // const handlePayPalPayment = (details, data) => {
+  //     console.log("PayPal Payment Successful:", details);
+  //     alert("Transaction completed by " + details.payer.name.given_name);
+  // };
+
+
+  // Category Checkbox Handler
+  const toggleCategory = (category) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  // Location Checkbox Handler
+  const toggleLocation = (location) => {
+    setSelectedLocations((prev) =>
+      prev.includes(location)
+        ? prev.filter((l) => l !== location)
+        : [...prev, location]
+    );
+  };
+
+  // Rental Duration Checkbox Handler
+  const toggleDuration = (duration) => {
+    setSelectedDurations((prev) =>
+      prev.includes(duration)
+        ? prev.filter((d) => d !== duration)
+        : [...prev, duration]
+    );
+  };
+
+  // Filter Cart Items
+  const filteredCart = cart.filter((item) => {
     return (
-        <div>
+      (selectedCategories.length ? selectedCategories.includes(item.category) : true) &&
+      (selectedLocations.length ? selectedLocations.includes(item.location) : true)
+    );
+  });
+
+  
+  const totalPrice = filteredCart.reduce((acc, item) => acc + Number(item.price), 0);
+  const formattedTotalPrice = totalPrice ? totalPrice.toFixed(2) : "0.00";
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-5 mx-10">
+      <div className="border border-pink-700 p-4 w-full sm:w-96">
+        <h2 className="text-pink-700 font-bold text-lg">Rental Duration</h2>
+        {["Per Hour", "Per Day"].map((duration) => (
+          <label key={duration} className="block">
+            <input
+              type="checkbox"
+              checked={selectedDurations.includes(duration)}
+              onChange={() => toggleDuration(duration)}
+            />
+            {duration}
+          </label>
+        ))}
+        <h2 className="text-pink-700 font-bold text-lg mt-4">Category</h2>
+      {["Dogs", "Cats", "Pet Clothing", "Pet Carriers", "Dog & Cat Beds"].map((category) => (
+        <label key={category} className="block">
+          <input
+            type="checkbox"
+            checked={selectedCategories.includes(category)}
+            onChange={() => toggleCategory(category)}
+          />
+          {category}
+        </label>
+      ))}
+    <div className="w-full bg-pink-700 h-0.5 mt-1 -mb-3 block"></div>
+        <h2 className="text-pink-700 font-bold text-lg mt-4">Location</h2>
+        <input
+          type="text"
+          placeholder="Search location..."
+          className="border p-2 w-full mb-2"
+          value={searchLocation}
+          onChange={(e) => setSearchLocation(e.target.value)}
+        />
+        {["Houston", "San Francisco", "Seattle", "Florida", "Illinois"].filter((location) =>
+          location.toLowerCase().includes(searchLocation.toLowerCase())
+        ).map((location) => (
+          <label key={location} className="block">
+            <input
+              type="checkbox"
+              checked={selectedLocations.includes(location)}
+              onChange={() => toggleLocation(location)}
+            />
+            {location}
+          </label>
+        ))}
+    <div className="w-full bg-pink-700 h-0.5 mt-1 -mb-3 block"></div>
+
+        <h2 className="text-pink-700 font-bold text-lg mt-4">Cart Totals</h2>
+        <div className="flex justify-between">
+          <span>Subtotal:</span>
+          <span>${formattedTotalPrice}</span>
+        </div>
+        <div className="flex justify-between font-bold">
+          <span>Total:</span>
+          <span>${formattedTotalPrice}</span>
+        </div>
+       
+        <div className="p-4 border border-gray-300 rounded">
+        <h2 className="text-pink-700 font-bold text-lg mt-4">Payment Method</h2>
+
+            <div className="flex justify-center gap-4">
+                <img
+                    src={paypal}
+                    alt="PayPal"
+                    className={`w-20 h-12 cursor-pointer ${
+                        selectedPayment === "paypal" ? "border-blue-500" : "border-gray-300"
+                    }`}
+                    onClick={() => setSelectedPayment("paypal")}
+                />
+                <img
+                    src={googlepay}
+                    alt="Google Pay"
+                    className={`w-16 h-12 cursor-pointer ${
+                        selectedPayment === "googlepay" ? "border-blue-500" : "border-gray-300"
+                    }`}
+                    onClick={() => setSelectedPayment("googlepay")}
+                />
+                <img
+                    src={visa}
+                    alt="Visa"
+                    className={`w-20 h-12 cursor-pointer ${
+                        selectedPayment === "visa" ? "border-blue-500" : "border-gray-300"
+                    }`}
+                    onClick={() => setSelectedPayment("visa")}
+                />
+            </div>
+
+            {/* <div className="mt-4">
+                {selectedPayment === "paypal" && (
+                    <PayPalScriptProvider options={{ "client-id": "YOUR_PAYPAL_CLIENT_ID" }}>
+                        <PayPalButtons
+                            style={{ layout: "horizontal" }}
+                            createOrder={(data, actions) => {
+                                return actions.order.create({
+                                    purchase_units: [{ amount: { value: "10.00" } }],
+                                });
+                            }}
+                            onApprove={handlePayPalPayment}
+                        />
+                    </PayPalScriptProvider>
+                )}
+
+                {(selectedPayment === "googlepay" || selectedPayment === "visa") && (
+                    <button
+                        onClick={handleStripePayment}
+                        className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-4"
+                    >
+                        Pay with {selectedPayment === "googlepay" ? "Google Pay" : "Visa"}
+                    </button>
+                )}
+            </div> */}
+        </div>
+
+        <button className="bg-pink-700 text-white w-full mt-4 p-2 rounded">
+          Proceed to Checkout
+        </button>
+      </div>
+
+      {/* Cart Items */}
+      <div className="w-full sm:w-2/3">
         {loading ? (
           <p>Loading Cart...</p>
-        ) : error ? (
-          <p className="text-red-500">Error loading cart</p>
-        ) : cart.length > 0 ? (
-                cart.map((car) =>(
-                    <div key={cart.id}>
-                      <img
-                        src={`${cartimage}${car.image}`} // Change URL to match your setup
-                        alt={car.title}
-                        className="w-full h-64 object-cover cursor-pointer"
-                        // onClick={() => window.location.href = `/product/${product.id}`} // Redirect to details page
-                      />
-                        <p>{car.title}</p>
-                        <p>{car.price}</p>
-                        <p>{car.description}</p>
-                        <p>{car.location}</p>
-                    </div>
-                ))
-        ) : (
-            <p>No Cart to display</p>
-        )}
+        ) : filteredCart.length > 0 ? (
+          filteredCart.map((car) =>(
+            <div key={cart.id} className="flex gap-5 border border-pink-700 p-2 sm:p-5 flex-row ">
+              <img
+                src={`${productUrl}${car.image}`} 
+                alt={car.title}
+                className="w-52 h-52 "
+                // onClick={() => window.location.href = `/product/${product.id}`} // Redirect to details page
+              />
+              
+              <div className="flex flex-col">
+                <p className="text-sm font-bold bg-[#7fffd4] w-56 text-center  p-1 rounded">{car.title}</p>
+                <div className="inline-flex gap-3 items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+            </svg>
 
-        </div>
-    )
+                <p className='w-52 my-2' style={{fontSize:"13px"}}>{car.location}</p>
+                </div>
+                <div className="inline-flex flex-wrap gap-5 sm:gap-0 ">
+                <p className="text-sm h-8 font-bold bg-[#7fffd4]  text-center  p-1 rounded 
+                w-20">${car.price}</p>
+            <p className="width-des sm:translate-x-28">{car.maintenance}</p>
+            </div>
+            </div>
+            </div>
+                ))
+              ) : (
+                  <p>No Cart to display</p>
+              )
+                }
+      </div>
+    </div>
+  );
 }
 
-export default Cart
+export default Cart;

@@ -8,6 +8,7 @@ import Iconfour from './image/Vector (10).png'
 import Iconfive from './image/Vector (11).png'
 import Iconsix from './image/Vector (12).png'
 import { Link } from "react-router-dom";
+import { cache } from "react";
 
 const productUrl = 'http://localhost/source_code/image/'
 
@@ -53,9 +54,32 @@ function ShopPage (){
     fetchProduct()
   }, []);
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
     console.log("Added to cart:", product);
-    // Add logic to store product in localStorage or global state
+    const userId = parseInt(localStorage.getItem('user_id'), 10) || null;
+    if (!userId) {
+        console.error("User ID is missing");
+        alert("You must be logged in to add items to the cart.");
+        return
+    }
+
+    const quantity = 1
+    const totalPrice = product ? quantity * parseFloat(product.price) + parseFloat(product.security_amount) : 0;
+
+    const payload = {
+      user_id :userId,
+      quantity,
+      product_id:product?.id || null,
+      total_price:totalPrice
+    
+    }
+    try{
+      const response = await Api.post('/add_to_cart.php', JSON.stringify(payload),{
+        headers: {'Content-Type': 'application/json'}
+      })
+      alert ('Product is Added Successfully')
+    }
+    catch (err) {console.log (err)} 
   };
 
   const productList = (
@@ -63,17 +87,19 @@ function ShopPage (){
       { loading ? (
         <p>Loading Product</p>
       ) : products.length > 0 ?(products.map((product) => (
-        <Link to={`/shop/${product.id}`}>
         <div className="relative  group">
         <div key={product.id} className="border p-4 shadow-lg sm:w-80 w-72 relative">
+        <Link to={`/shop/${product.id}`}>
           <img
             src={`${productUrl}${product.image}`} // Change URL to match your setup
             alt={product.title}
             className="w-full h-64 object-cover cursor-pointer"
             // onClick={() => window.location.href = `/product/${product.id}`} // Redirect to details page
           />
-          <h2 className="text-lg font-semibold mt-2 text-sm capitalize text-center">{product.title}</h2>
-          <p className="text-gray-600 text-center">${product.price}</p>
+          <h2 className="text-lg  group-hover:opacity-100 transition-opacity font-semibold mt-2 text-sm capitalize text-center">{product.title}</h2>
+          <p className="text-gray-600 text-center  group-hover:opacity-100 transition-opacity">${product.price}</p>
+        </Link>
+
           <button
             onClick={() => handleAddToCart(product)}
             className="bg-pink-500 text-white px-4  group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl hover:bg-black hover:text-white relative z-10 py-2 mt-2 rounded w-60 mx-auto flex justify-center"
@@ -81,9 +107,8 @@ function ShopPage (){
             Add to Cart
           </button>
         </div>
-      <div className="absolute inset-0 bg-black bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl "></div>
+      {/* <div className="absolute inset-0 bg-black bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl "></div> */}
         </div>
-        </Link>
       ))) : (<p>No Products to display</p>)}
     </div>
   );

@@ -137,6 +137,10 @@
     .width-leght{
       width: 290px;
     }
+
+    .width-des{
+      width: 240px;
+    }
   }
 
   .bg-image {
@@ -252,6 +256,11 @@
     }
     .width-leght{
       width: 88%;
+    }
+    .width-des{
+      width: 320px;
+      font-size: 13px;
+      text-align: justify;
     }
   }
   
