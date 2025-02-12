@@ -6,6 +6,21 @@ import visa from './images/visa.png'
 const productUrl = "http://localhost/source_code/image/";
 //const stripePromise = loadStripe("YOUR_STRIPE_PUBLIC_KEY");
 
+
+const locations = [
+  "Houston", "San Francisco", "Seattle", "Florida", "Illinois",
+  "New York", "Los Angeles", "Chicago", "Miami", "Dallas"
+];
+
+const categories = [
+  { title: "Dogs" },
+  { title: "Cats" },
+  { title: "Pet Clothing"},
+  { title: "Pet Carriers" },
+  { title: "Dog & Cat Beds"}
+];
+
+
 function Cart() {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -60,22 +75,24 @@ function Cart() {
 
 
   // Category Checkbox Handler
-  const toggleCategory = (category) => {
-    setSelectedCategories((prev) =>
-      prev.includes(category)
-        ? prev.filter((c) => c !== category)
-        : [...prev, category]
-    );
-  };
+  const [show, setShow] = useState(false);
 
-  // Location Checkbox Handler
-  const toggleLocation = (location) => {
-    setSelectedLocations((prev) =>
-      prev.includes(location)
-        ? prev.filter((l) => l !== location)
-        : [...prev, location]
-    );
-  };
+const toggleCategory = (categoryTitle) => {
+  setSelectedCategories((prevSelected) =>
+    prevSelected.includes(categoryTitle)
+      ? prevSelected.filter((c) => c !== categoryTitle)
+      : [...prevSelected, categoryTitle]
+  );
+};
+
+const filteredCategory =
+  selectedCategories.length > 0
+    ? categories.filter((category) => selectedCategories.includes(category.title))
+    : categories;
+
+const visibleCategories = show ? filteredCategory : filteredCategory.slice(0, 3);
+
+
 
   // Rental Duration Checkbox Handler
   const toggleDuration = (duration) => {
@@ -86,21 +103,43 @@ function Cart() {
     );
   };
 
-  // Filter Cart Items
   const filteredCart = cart.filter((item) => {
+    const itemCategory = item.category?.trim().toLowerCase() || ""; // Prevent undefined errors
     return (
-      (selectedCategories.length ? selectedCategories.includes(item.category) : true) &&
-      (selectedLocations.length ? selectedLocations.includes(item.location) : true)
+      (selectedCategories.length
+        ? selectedCategories.some((selected) => selected.toLowerCase() === itemCategory)
+        : true) &&
+      (selectedLocations.length
+        ? selectedLocations.includes(item.location)
+        : true)
     );
   });
+  
+
+  const [showAll, setShowAll] = useState(false);
+
+ 
+  const filteredLocations = locations.filter((location) =>
+    location.toLowerCase().includes(searchLocation.toLowerCase())
+  );
+
+  const displayedLocations = showAll ? filteredLocations : filteredLocations.slice(0, 3);
+
+  const toggleLocation = (location) => {
+    setSelectedLocations((prev) =>
+      prev.includes(location)
+        ? prev.filter((loc) => loc !== location)
+        : [...prev, location]
+    );
+  };
 
   
   const totalPrice = filteredCart.reduce((acc, item) => acc + Number(item.price), 0);
   const formattedTotalPrice = totalPrice ? totalPrice.toFixed(2) : "0.00";
 
-  return (
+  const content = (
     <div className="flex flex-col sm:flex-row gap-5 mx-10">
-      <div className="border border-pink-700 p-4 w-full sm:w-96">
+      <div className="border border-pink-700 p-4 w-full sm:w-96 mb-10" style={{height:'750px'}}>
         <h2 className="text-pink-700 font-bold text-lg">Rental Duration</h2>
         {["Per Hour", "Per Day"].map((duration) => (
           <label key={duration} className="block">
@@ -112,38 +151,52 @@ function Cart() {
             {duration}
           </label>
         ))}
-        <h2 className="text-pink-700 font-bold text-lg mt-4">Category</h2>
-      {["Dogs", "Cats", "Pet Clothing", "Pet Carriers", "Dog & Cat Beds"].map((category) => (
-        <label key={category} className="block">
+         <h2 className="text-pink-700 font-bold text-lg mt-4">Category</h2>
+    {visibleCategories.map(({ title, icon }) => (
+      <label key={title} className="block flex items-center gap-2">
+        <input
+          type="checkbox"
+          checked={selectedCategories.includes(title)}
+          onChange={() => toggleCategory(title)}
+        />
+        {title}
+      </label>
+    ))}
+    
+    {filteredCategory.length > 3 && (
+      <button className="text-pink-700 mt-2" onClick={() => setShow(!show)}>
+        {show ? "View Less" : "View All"}
+      </button>
+    )}
+    <div>
+      <div className="w-full bg-pink-700 h-0.5 mt-1 -mb-3 block"></div>
+      <h2 className="text-pink-700 font-bold text-lg mt-4">Location</h2>
+      <input
+        type="text"
+        placeholder="Search location..."
+        className="border p-2 w-full mb-2"
+        value={searchLocation}
+        onChange={(e) => setSearchLocation(e.target.value)}
+      />
+      {displayedLocations.map((location) => (
+        <label key={location} className="block">
           <input
             type="checkbox"
-            checked={selectedCategories.includes(category)}
-            onChange={() => toggleCategory(category)}
+            checked={selectedLocations.includes(location)}
+            onChange={() => toggleLocation(location)}
           />
-          {category}
+          {location}
         </label>
       ))}
-    <div className="w-full bg-pink-700 h-0.5 mt-1 -mb-3 block"></div>
-        <h2 className="text-pink-700 font-bold text-lg mt-4">Location</h2>
-        <input
-          type="text"
-          placeholder="Search location..."
-          className="border p-2 w-full mb-2"
-          value={searchLocation}
-          onChange={(e) => setSearchLocation(e.target.value)}
-        />
-        {["Houston", "San Francisco", "Seattle", "Florida", "Illinois"].filter((location) =>
-          location.toLowerCase().includes(searchLocation.toLowerCase())
-        ).map((location) => (
-          <label key={location} className="block">
-            <input
-              type="checkbox"
-              checked={selectedLocations.includes(location)}
-              onChange={() => toggleLocation(location)}
-            />
-            {location}
-          </label>
-        ))}
+      {filteredLocations.length > 3 && (
+        <button
+          className="text-pink-700 mt-2"
+          onClick={() => setShowAll(!showAll)}
+        >
+          {showAll ? "View Less" : "View All"}
+        </button>
+      )}
+      </div>
     <div className="w-full bg-pink-700 h-0.5 mt-1 -mb-3 block"></div>
 
         <h2 className="text-pink-700 font-bold text-lg mt-4">Cart Totals</h2>
@@ -218,16 +271,16 @@ function Cart() {
       </div>
 
       {/* Cart Items */}
-      <div className="w-full sm:w-2/3">
+      <div className="w-full sm:w-2/3 mb-10">
         {loading ? (
           <p>Loading Cart...</p>
         ) : filteredCart.length > 0 ? (
           filteredCart.map((car) =>(
-            <div key={cart.id} className="flex gap-5 border border-pink-700 p-2 sm:p-5 flex-row ">
+            <div key={cart.id} className="flex gap-5 border border-pink-700 p-1 sm:p-5 flex-row  flex-wrap">
               <img
                 src={`${productUrl}${car.image}`} 
                 alt={car.title}
-                className="w-52 h-52 "
+                className="w-56 h-52 "
                 // onClick={() => window.location.href = `/product/${product.id}`} // Redirect to details page
               />
               
@@ -239,12 +292,12 @@ function Cart() {
               <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
             </svg>
 
-                <p className='w-52 my-2' style={{fontSize:"13px"}}>{car.location}</p>
+                <p className='sm:w-52 w-48 my-2' style={{fontSize:"13px"}}>{car.location}</p>
                 </div>
                 <div className="inline-flex flex-wrap gap-5 sm:gap-0 ">
                 <p className="text-sm h-8 font-bold bg-[#7fffd4]  text-center  p-1 rounded 
                 w-20">${car.price}</p>
-            <p className="width-des sm:translate-x-28">{car.maintenance}</p>
+            <p className="width-des md:translate-x-0 lg:translate-x-28">{car.maintenance}</p>
             </div>
             </div>
             </div>
@@ -256,6 +309,14 @@ function Cart() {
       </div>
     </div>
   );
+
+  return (
+
+    <div>
+      <h1 className="bg-pink-300 text-pink-700 p-4 w-72 sm:w-11/12 mx-auto text-2xl mb-4 shadow-md font-bold">  Pet Rental</h1>
+      {content}
+    </div>
+  )
 }
 
 export default Cart;

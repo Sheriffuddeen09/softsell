@@ -100,7 +100,6 @@
   }
   .cart{
     color: red;
-    background-color: #20daaf;
   }
 
   @media (min-width: 310px) {
@@ -139,7 +138,10 @@
     }
 
     .width-des{
-      width: 240px;
+      width: 230px;
+      text-align: justify;
+      font-size: 12px;
+      padding: 2px;
     }
   }
 

@@ -1,6 +1,6 @@
 import { Link, useLocation } from "react-router-dom"
 import logo from './image/lo_ve-removebg-preview 1.png'
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 function Header ({categories, setSelectedCategory, selectedCategory, fetchProduct}){
 
@@ -8,6 +8,13 @@ function Header ({categories, setSelectedCategory, selectedCategory, fetchProduc
     const [drop, setDrop] = useState(false)
     const [dropWeb, setDropWeb] = useState(false)
     const [dropmobile, setDropMobile] = useState(false)
+
+    const [cartLength, setCartLength] = useState(0);
+
+    useEffect(() => {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartLength(cart.length);
+    }, []);
 
     const handleDropweb = () =>{
       setDropWeb(!dropWeb)
@@ -114,6 +121,7 @@ function Header ({categories, setSelectedCategory, selectedCategory, fetchProduc
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class={`size-10 hover:bg-gray-100 px-2 py-1 rounded-full  ${homepage === '/cart' ? 'cart' : null}`}>
         <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z" />
       </svg>
+      {cartLength}
       </Link>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class={`size-6 sm:hidden block`} onClick={handleMenu}>
     <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />

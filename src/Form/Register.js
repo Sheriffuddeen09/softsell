@@ -113,9 +113,11 @@ const RegisterPage = () =>{
                     <h1 className="sm:text-3xl text-xl text-center text-green-400 font-serif"><span className="sm:text-2xl text-xl text-black mt-5 text-center font-bold font-roboto">Create Account</span></h1>
                     <p className="text-sm text-black my-3  text-center font-roboto"> 
                     Enter your order number and email address below to view your rental details. </p>
-                    {/* <Google  />
-                    <Facebook /> */}
-                     {/* <Apple /> */}
+                    <div className="flex flex-col justify-center items-center mb-4">
+                    <Google  />
+                    <Facebook />
+                     <Apple />
+                     </div>
                     <div className="sm:inline-flex sm:flex-nowrap flex-wrap gap-1">
                     <div>
                     <p className="text-sm -mb-5 font-bold font-roboto text-black font-Cambria">

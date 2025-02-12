@@ -7,7 +7,7 @@ import colortwo from './image/Rectangle 82.png'
 import colorthird from './image/Rectangle 83.png'
 import colorfour from './image/Rectangle 84.png'
 import ReviewsPage from "./Reviews";
-//import { FaCalendarAlt, FaClock } from "react-icons/fa"; // Import icons
+import { FaCalendarAlt, FaClock } from "react-icons/fa"; // Import icons
 
 const productUrl = 'http://localhost/source_code/image/'
 
@@ -189,15 +189,13 @@ function ShopPageId (){
         {/* Pickup Date */}
         <div className="flex flex-col relative">
           <label className="font-bold text-sm my-2">Pick up date</label>
-          <input type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 rounded-md" />
-          {/* <FaCalendarAlt className="absolute left-2 top-10 text-[#D2016A]" /> */}
+          <input type="date" value={pickupDate} onChange={(e) => setPickupDate(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 border-pink-700 border rounded-md" />
         </div>
         
         {/* Drop-off Date */}
         <div className="flex flex-col relative">
           <label className="font-bold text-sm my-2">Drop off date</label>
-          <input type="date" value={dropoffDate} onChange={(e) => setDropoffDate(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 rounded-md" />
-          {/* <FaCalendarAlt className="absolute left-2 top-10 text-[#D2016A]" /> */}
+          <input type="date" value={dropoffDate} onChange={(e) => setDropoffDate(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 rounded-md border-pink-700 border" />
         </div>
       </div>
 
@@ -205,20 +203,18 @@ function ShopPageId (){
         {/* Pickup Time */}
         <div className="flex flex-col relative">
           <label className="font-bold text-sm my-2">Pick up time</label>
-          <input type="time" value={pickupTime} onChange={(e) => setPickupTime(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 rounded-md" />
-          {/* <FaClock className="absolute left-2 top-10 text-[#D2016A]" /> */}
+          <input type="time" value={pickupTime} onChange={(e) => setPickupTime(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 rounded-md border-pink-700 border" />
         </div>
         
         {/* Drop-off Time */}
         <div className="flex flex-col relative">
           <label className="font-bold text-sm my-2">Drop off time</label>
-          <input type="time" value={dropoffTime} onChange={(e) => setDropoffTime(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 rounded-md" />
-          {/* <FaClock className="absolute left-2 top-10 text-[#D2016A]" /> */}
+          <input type="time" value={dropoffTime} onChange={(e) => setDropoffTime(e.target.value)} className="border p-2 sm:w-40 w-32 pl-8 rounded-md border-pink-700 border" />
         </div>
       </div>
     </div>
         <div className="inline-flex flex-wrap gap-2 sm:gap-4 my-4 flex-wrap">
-          <button className="bg-[#D2016A] p-2 sm:w-40 w-32 rounded-xl text-white text-sm hover:bg-white hover:border-pink-700 border border-pink-700 border-2 hover:text-pink-700">Rent Now</button>
+          <button className="bg-[#D2016A] p-2 sm:w-40 w-32 rounded-xl text-white text-sm hover:bg-white hover:border-pink-700 border border-pink-700 border hover:text-pink-700">Rent Now</button>
           <Link to={'/inquiry'} className="border-[#D2016A]  hover:bg-pink-700 hover:text-white sm:text-center border border-2 sm:w-40 w-32 rounded-xl text-[#D2016A] bg-white"><button className="sm:text-center flex flex-col items-center justify-center mx-auto text-sm translate-y-1">Inquiry</button></Link>
         </div>
         <h1 className="font-bold id-width my-2">Queenmore Dog Sweater - <span className="text-[#D2016A]">Product Details</span></h1>

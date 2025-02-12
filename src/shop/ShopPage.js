@@ -66,12 +66,14 @@ function ShopPage (){
     const quantity = 1
     const totalPrice = product ? quantity * parseFloat(product.price) + parseFloat(product.security_amount) : 0;
 
+    const category = product?.category || "Uncategorized";
+
     const payload = {
       user_id :userId,
       quantity,
       product_id:product?.id || null,
-      total_price:totalPrice
-    
+      total_price:totalPrice,
+      category
     }
     try{
       const response = await Api.post('/add_to_cart.php', JSON.stringify(payload),{

@@ -1,13 +1,14 @@
-import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google';
+import { GoogleLogin } from "@react-oauth/google";
 
 function Google() {
   return (
-    <GoogleOAuthProvider clientId="YOUR_GOOGLE_CLIENT_ID">
+    <div className="w-72 p-2 my-2 bg-white rounded-md text-center">
       <GoogleLogin
-        onSuccess={(response) => console.log('Login Success:', response)}
-        onError={() => console.log('Login Failed')}
+        onSuccess={(response) => console.log("Login Success:", response)}
+        onError={() => console.log("Login Failed")}
+        className="border-0"
       />
-    </GoogleOAuthProvider>
+    </div>
   );
 }
 
