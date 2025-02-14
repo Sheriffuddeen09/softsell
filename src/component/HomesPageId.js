@@ -6,13 +6,12 @@ import colorone from './image/Rectangle 81.png'
 import colortwo from './image/Rectangle 82.png'
 import colorthird from './image/Rectangle 83.png'
 import colorfour from './image/Rectangle 84.png'
-import ReviewsPage from "./Reviews";
+import ReviewsPage from "../shop/Reviews";
 import { FaCalendarAlt, FaClock } from "react-icons/fa"; // Import icons
-import Shipment from "./Shipment";
 
 const productUrl = 'http://localhost/source_code/image/'
 
-function ShopPageId (){
+function HomesPageId (){
 
   const {id} = useParams()
 
@@ -52,7 +51,7 @@ function ShopPageId (){
       setError("")
       setLoading(true)
       try {
-        const response = await Api.get(`/productId.php?id=${id}`);
+        const response = await Api.get(`/homespageId.php?id=${id}`);
         console.log("API Response:", response.data);
 
     if (response.data.success && response.data.product) {
@@ -314,8 +313,8 @@ function ShopPageId (){
       <div  className={changeId === 1 ? "show-content" : "content"}>
       {description}
       </div>
-      <div  className={`sm:mx-auto px-3 my-6 ${changeId === 2 ? "show-content" : "content"}`}>
-      <Shipment />
+      <div  className={changeId === 2 ? "show-content" : "content"}>
+      Shipment Information
       </div>
       <div  className={changeId === 3 ? "show-content" : "content"}>
     <p className="font-bold text-center p-3  sm:justify-start sm:translate-x-16  flex-wrap flex mx-auto"><p className="inline-flex items-center">Reviews <span className="relative left-7 text-blue-700 text-sm bottom-2">{reviews.length}</span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 cursor-pointer" onClick={handleReviews}>
@@ -336,4 +335,4 @@ function ShopPageId (){
   )
 }
 
-export default ShopPageId;
+export default HomesPageId;

@@ -17,6 +17,8 @@ import Cart from "./cart/Cart";
 import EditProfile from "./Form/EditProfile";
 import Category from "./category/Category";
 import Header from "./Layout/Header";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 import { useEffect, useState } from "react"
 import { Api } from "./api/axios";
@@ -24,11 +26,22 @@ import { Api } from "./api/axios";
 import AOS from 'aos'
 import 'aos/dist/aos.css'
 import ShopPageId from "./shop/ShopPageId";
+import HomePageId from "./component/HomePageId";
+import HomesPageId from "./component/HomesPageId";
+import CategoryId from "./category/CategoryId";
+import Shipment from "./shop/Shipment";
+import Checkout from "./shop/Checkout";
+import Payment from "./payment/Payment";
+import OrderTracking from "./tracking/OrderTrack";
+import Notifications from "./notification/Notification";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 
    
 function App() {
 
+  const stripePromise = loadStripe("your-stripe-public-key");
+  
   useEffect(() =>{
     AOS.init({duration: 2000})
 }, [])
@@ -41,7 +54,47 @@ function App() {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [error, setError] = useState({})
     const [loading, setLoading] = useState(false)
+    const [cart, setCart] = useState([])
 
+
+    const [order, setOrder] = useState([])
+    const [paymentMethod, setPaymentMethod] = useState('')
+    const [totalPrice, setTotalPrice] = useState(0)
+
+
+    const handlePaymentSuccess = async (transactionId) => {
+      try {
+        const userId = localStorage.getItem("user_id");
+  
+        // Send payment details to backend
+        const response = await Api.post("/process_payment.php", {
+          user_id: userId,
+          total_price: totalPrice,
+          payment_method: paymentMethod,
+          transaction_id: transactionId,
+          order_items: order.map((item) => ({
+            product_id: item.product_id,
+            quantity: item.quantity,
+            size: item.size,
+            color: item.color,
+            pickup_date: item.pickup_date,
+            dropoff_date: item.dropoff_date,
+            pickup_time: item.pickup_time,
+            dropoff_time: item.dropoff_time,
+          })),
+        });
+  
+        if (response.data.success) {
+          alert("Payment Successful! Order confirmed.");
+          setOrder([]);
+        } else {
+          alert("Payment was successful, but order processing failed.");
+        }
+      } catch (error) {
+        console.error("Error processing payment:", error);
+        alert("An error occurred while confirming your order.");
+      }
+    };
 
     const fetchProduct = async (category = '') =>{
 
@@ -83,7 +136,7 @@ function App() {
 
   return (
     <div className="">
-      <Header fetchProduct={fetchProduct} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} />
+      <Header fetchProduct={fetchProduct} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} cart={cart} />
       <Routes>
 
         {/* register */}
@@ -109,6 +162,20 @@ function App() {
       <Route path="/shop/:id" element={
         <Protected>
           <ShopPageId />
+        </Protected>
+      } />
+
+      {/* shoppage */}
+      <Route path="/home/:id" element={
+        <Protected>
+          <HomePageId />
+        </Protected>
+      } />
+
+       {/* shoppage */}
+       <Route path="/homes/:id" element={
+        <Protected>
+          <HomesPageId />
         </Protected>
       } />
 
@@ -145,6 +212,12 @@ function App() {
         </Protected>
       } />
 
+      {/* CategoryId */}
+      <Route path="/category/:id" element={
+        <Protected>
+          <CategoryId />
+        </Protected>
+      } />
 
       {/* EditProfile */}
       <Route path="/edit" element={
@@ -177,10 +250,55 @@ function App() {
 
       <Route path="/cart" element={
         <Protected>
-        <Cart />
+        <Cart cart={cart} setCart={setCart} />
         </Protected>
       } />
 
+      {/* Shipment */}
+
+      <Route path="/shipment" element={
+        <Protected>
+        <Shipment totalPrice={totalPrice} paymentMethod={paymentMethod} />
+        </Protected>
+      } />
+
+      {/* Checkout */}
+
+      <Route path="/checkout" element={
+        <Protected>
+        <Checkout totalPrice={totalPrice} setTotalPrice={setTotalPrice} paymentMethod={paymentMethod} order={order} setOrder={setOrder} />
+        </Protected>
+      } />
+
+      {/* Payment */}
+
+      <Route path="/payment" element={
+        <Protected>
+           <PayPalScriptProvider options={{ "client-id": "your-paypal-client-id" }}>
+           <Elements stripe={stripePromise}>
+        <Payment onPayment={handlePaymentSuccess} paymentMethod={paymentMethod} totalPrice={totalPrice} setOrder={setOrder} order={order}/>
+        </Elements>
+        </PayPalScriptProvider>
+        </Protected>
+
+      } />
+
+      {/* OrderTracking */}
+
+      <Route path="/order" element={
+         <Protected>
+          <OrderTracking />
+         </Protected>
+      } />
+
+
+      {/* OrderTracking */}
+
+      <Route path="/notification" element={
+         <Protected>
+          <Notifications />
+         </Protected>
+      } />
       {/* homepage */}
 
       <Route path="/" element={

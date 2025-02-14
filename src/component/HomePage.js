@@ -61,7 +61,7 @@ function HomePage () {
   const [dropDate, setDropDate] = useState('')
   const [pickDate, setPickDate] = useState('')
   const [location, setLocation] = useState('')
-  const [page, setPage] = useState(1) 
+  const [pages, setPages] = useState(1) 
   const limit = 4
 
   const FetchPets = async () =>{
@@ -73,9 +73,10 @@ function HomePage () {
         location,
         dateSearch: pickDate, // Pass pickup date
         dropSearch: dropDate, // Pass drop-off date
-        page
+        pages
     }})
 
+    
     if(Array.isArray(response.data.message)){
     setPets(response.data.message)
   }
@@ -87,7 +88,7 @@ function HomePage () {
 
   useEffect(() => {
     FetchPets();
-  }, [page, show, pickDate, dropDate, location]);
+  }, [pages, show, pickDate, dropDate, location]);
 
   const pageNext = (
 
@@ -98,14 +99,16 @@ function HomePage () {
             <img src={`${imageUrl}${pet.image}`} alt={pet.name} className="w-full object-cover rounded" />
             <h3 className="text-lg font-bold mt-2">{pet.name}</h3>
             <p className="text-sm">Price: ${pet.price}</p>
-            <p className="text-xs">Pick-up Date: {new Date(pet.pickup_date).toLocaleString()}</p>
-            <p className="text-xs">Drop-off Date: {new Date(pet.dropoff_date).toLocaleString()}</p>
+            <p className="text-xs my-2">Pick-up Date: {new Date(pet.pick_up_date).toLocaleString()}</p>
+            <p className="text-xs">Drop-off Date: {new Date(pet.drop_off_date).toLocaleString()}</p>
+            <Link to={`/home/${pet.id}`}>
             <button 
               className="bg-pink-500 text-white px-4 py-2 rounded-lg mt-3"
-              onClick={() => window.location.href = `/checkout?petId=${pet.id}`}
+              onClick={() => window.location.href = `/home/${pet.id}`}
             >
               Rent Now
             </button>
+            </Link>
           </div>
         ))}
       </div>
@@ -114,8 +117,8 @@ function HomePage () {
       <div className="flex justify-center items-center mt-5">
         <button 
           className="mr-2 bg-gray-300 px-3 py-1 rounded-lg" 
-          onClick={() => setPage(page - 1)} 
-          disabled={page === 1}
+          onClick={() => setPages(pages - 1)} 
+          disabled={pages === 1}
         >
          -
         </button>
@@ -129,7 +132,7 @@ function HomePage () {
 
         <button 
           className="ml-2 bg-gray-300 px-3 py-1 rounded-lg" 
-          onClick={() => setPage(page + 1)}
+          onClick={() => setPages(pages + 1)}
         >
           +
         </button>
@@ -172,12 +175,12 @@ function HomePage () {
           <input style={{fontSize:'9px'}} type="text" value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Location , Address" className="w-full outline-none" />
         </div>
         <div className="flex items-center bg-white p-2 rounded-lg shadow-sm w-44 ">
-          <Calendar value={dropDate} onChange={(e) => setDropDate(e.target.value)} className="text-gray-500 mr-2" />
-          <input style={{fontSize:'9px'}} type="text" placeholder="Pick UP Date & Time" className="w-full outline-none" />
+          <Calendar className="text-gray-500 mr-2" />
+          <input style={{fontSize:'9px'}} type="text"  value={dropDate} onChange={(e) => setDropDate(e.target.value)} placeholder="Pick UP Date & Time" className="w-full outline-none" />
         </div>
         <div className="flex items-center bg-white p-2 rounded-lg shadow-sm w-44">
-          <Calendar value={pickDate} onChange={(e) => setPickDate(e.target.value)} className="text-gray-500 mr-2" />
-          <input style={{fontSize:'9px'}} type="text" placeholder="Drop off Date & Time" className="w-full outline-none" />
+          <Calendar className="text-gray-500 mr-2" />
+          <input style={{fontSize:'9px'}} type="text" value={pickDate} onChange={(e) => setPickDate(e.target.value)}  placeholder="Drop off Date & Time" className="w-full outline-none" />
         </div>
         <Button onClick={FetchPets()} className="bg-pink-500 text-white px-6 py-2 rounded-lg flex items-center">
           <Search className="mr-2" /> Search

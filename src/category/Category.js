@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 
 const categoryUrl = 'http://localhost/source_code/category/'
@@ -34,6 +35,7 @@ function Category ({products, loading}){
       { loading ? (
         <p>Loading Product</p>
       ) : products.length > 0 ?(products.map((product) => (
+        <Link to={`/category/${product.id}`}>
         <div className="relative  group">
         <div key={product.id} className="relative group w-72 sm:w-80">
           {/* Product Image */}
@@ -56,10 +58,10 @@ function Category ({products, loading}){
 
           </span> {/* Arrow Icon */}
           </button>
-          
         </div>
       <div className="absolute inset-0 bg-black  bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl "></div>
         </div>
+        </Link>
       ))) : (<p>No Products to display</p>)}
     </div>
   );

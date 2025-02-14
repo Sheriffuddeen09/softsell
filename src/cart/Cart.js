@@ -3,6 +3,7 @@ import { Api } from "../api/axios";
 import paypal from './images/paypal.png'
 import googlepay from './images/googlepay.png'
 import visa from './images/visa.png'
+import CartRemove from "./CartRemove";
 const productUrl = "http://localhost/source_code/image/";
 //const stripePromise = loadStripe("YOUR_STRIPE_PUBLIC_KEY");
 
@@ -21,8 +22,7 @@ const categories = [
 ];
 
 
-function Cart() {
-  const [cart, setCart] = useState([]);
+function Cart({cart, setCart}) {
   const [loading, setLoading] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedLocations, setSelectedLocations] = useState([]);
@@ -114,6 +114,8 @@ const visibleCategories = show ? filteredCategory : filteredCategory.slice(0, 3)
         : true)
     );
   });
+
+
   
 
   const [showAll, setShowAll] = useState(false);
@@ -216,53 +218,21 @@ const visibleCategories = show ? filteredCategory : filteredCategory.slice(0, 3)
                 <img
                     src={paypal}
                     alt="PayPal"
-                    className={`w-20 h-12 cursor-pointer ${
-                        selectedPayment === "paypal" ? "border-blue-500" : "border-gray-300"
-                    }`}
-                    onClick={() => setSelectedPayment("paypal")}
+                    className={`w-20 h-12 cursor-pointer`}
                 />
                 <img
                     src={googlepay}
                     alt="Google Pay"
-                    className={`w-16 h-12 cursor-pointer ${
-                        selectedPayment === "googlepay" ? "border-blue-500" : "border-gray-300"
-                    }`}
-                    onClick={() => setSelectedPayment("googlepay")}
+                    className={`w-16 h-12 cursor-pointer `}
                 />
                 <img
                     src={visa}
                     alt="Visa"
-                    className={`w-20 h-12 cursor-pointer ${
-                        selectedPayment === "visa" ? "border-blue-500" : "border-gray-300"
-                    }`}
-                    onClick={() => setSelectedPayment("visa")}
+                    className={`w-20 h-12 cursor-pointer`}
                 />
             </div>
 
-            {/* <div className="mt-4">
-                {selectedPayment === "paypal" && (
-                    <PayPalScriptProvider options={{ "client-id": "YOUR_PAYPAL_CLIENT_ID" }}>
-                        <PayPalButtons
-                            style={{ layout: "horizontal" }}
-                            createOrder={(data, actions) => {
-                                return actions.order.create({
-                                    purchase_units: [{ amount: { value: "10.00" } }],
-                                });
-                            }}
-                            onApprove={handlePayPalPayment}
-                        />
-                    </PayPalScriptProvider>
-                )}
-
-                {(selectedPayment === "googlepay" || selectedPayment === "visa") && (
-                    <button
-                        onClick={handleStripePayment}
-                        className="bg-blue-500 text-white px-4 py-2 rounded w-full mt-4"
-                    >
-                        Pay with {selectedPayment === "googlepay" ? "Google Pay" : "Visa"}
-                    </button>
-                )}
-            </div> */}
+           
         </div>
 
         <button className="bg-pink-700 text-white w-full mt-4 p-2 rounded">
@@ -277,15 +247,38 @@ const visibleCategories = show ? filteredCategory : filteredCategory.slice(0, 3)
         ) : filteredCart.length > 0 ? (
           filteredCart.map((car) =>(
             <div key={cart.id} className="flex gap-5 border border-pink-700 p-1 sm:p-5 flex-row  flex-wrap">
+              <div className="flex flex-col">
               <img
                 src={`${productUrl}${car.image}`} 
                 alt={car.title}
                 className="w-56 h-52 "
                 // onClick={() => window.location.href = `/product/${product.id}`} // Redirect to details page
               />
-              
+              <div className="inline-flex gap-6 flex-wrap hidden">
+                    <div >
+                    <p className="text-center font-bold">Pick up Date & Time</p>
+                    <div className="border w-36 border-2 rounded-lg p-2 mx-auto border-pink-700 text-center">
+                     <p>{car.pick_up_date}</p>
+                     <p>{car.pick_up_time}</p>
+                     
+                    </div>
+                    </div>
+                    <div>
+                    <p className="text-center font-bold">Drop off Date & Time</p>
+                    <div className="border w-36 border-2 rounded-lg p-2 mx-auto border-pink-700 text-center">
+                     <p>{car.pick_up_date}</p>
+                     <p>{car.pick_up_time}</p>
+                    
+                    </div>
+                    </div>
+                    </div>
+             
+              </div>
               <div className="flex flex-col">
-                <p className="text-sm font-bold bg-[#7fffd4] w-56 text-center  p-1 rounded">{car.title}</p>
+                <div className="flex flex-row justify-between items-center">
+                <p className="text-sm font-bold bg-[#7fffd4] sm:w-56 text-center  p-1 rounded">{car.title}</p>
+              <CartRemove cartItem={car} setCart={setCart} />
+              </div>
                 <div className="inline-flex gap-3 items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -313,7 +306,7 @@ const visibleCategories = show ? filteredCategory : filteredCategory.slice(0, 3)
   return (
 
     <div>
-      <h1 className="bg-pink-300 text-pink-700 p-4 w-72 sm:w-11/12 mx-auto text-2xl mb-4 shadow-md font-bold">  Pet Rental</h1>
+      <h1 className="bg-pink-300 text-pink-700 p-4 w-72 sm:w-11/12 mx-auto text-2xl mb-4 shadow-md font-bold">  Pet Rental </h1>
       {content}
     </div>
   )

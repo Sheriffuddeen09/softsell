@@ -67,6 +67,7 @@ function Profile (){
     
     const sidebar = (
         <div className="flex flex-col gap-4">
+            <Link to={'/notification'}>
             <div className="bg-[#CEEEE9] sm:w-80 w-72 rounded p-4 border border-2 border-blue-200">
                 <div className="inline-flex items-center gap-3  ">
                 <img src={vectorseven} className="h-4 w-4" alt="imagevector" />
@@ -75,7 +76,7 @@ function Profile (){
                 <p className="text-sm my-2"> Notification</p>
                 <p className=" w-64" style={{fontSize:"10px"}}> We send SMS messages for booking-related notifications. You can select the notifications you would like to receive.</p>
             </div>
-
+        </Link>
             <div className="bg-[#CEEEE9] sm:w-80 w-72 rounded p-4 border border-2 border-blue-200">
                 <div className="inline-flex items-center gap-3  ">
                 <img src={vectoreight} className="h-4 w-4" alt="imagevector" />
@@ -84,10 +85,11 @@ function Profile (){
                 <p className="text-sm my-2"> Tell Us About Your Pets</p>
                 <p className=" w-64 sm:w-72" style={{fontSize:"10px"}}> Share details about your furry companions to help us provide the perfect rental experience! Add them one by one to ensure we understand their unique needs and preferences.</p>
                 <p className=" w-64 sm:w-72 my-2" style={{fontSize:"10px"}}> To ensure safety and compatibility with the rental environment.</p>
-                <Link to={''}><p className="text-pink-700 text-sm">View Pets</p></Link>
+                <Link to={'/shop'}><p className="text-pink-700 text-sm">View Pets</p></Link>
             </div>
 
             <div className="bg-[#CEEEE9] sm:w-80 w-72 rounded p-4 border border-2 border-blue-200">
+                <Link to={'/payment'}>
                 <div className="inline-flex items-center gap-3  ">
                 <img src={vectorsix} className="h-3 w-3" alt="imagevector" />
                     <p className="font-bold  text-sm">Payment Methods</p>
@@ -97,8 +99,9 @@ function Profile (){
                 <img src={vectorgoogle} className="h-6 w-14" alt="imagevector" />
                 <img src={vectorpay} className="h-6 w-14" alt="imagevector" />
                 <img src={vectorvisa} className="h-4 w-14" alt="imagevector" />
-
+            
                 </div>
+                </Link>
             </div>
             
         </div>

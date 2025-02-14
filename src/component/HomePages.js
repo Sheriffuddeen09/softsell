@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Api } from "../api/axios"
+import { Link } from "react-router-dom"
 
 
 const imageUrl = 'http://localhost/source_code/image/'
@@ -11,6 +12,8 @@ function HomePages ({pickDate, dropDate, location}){
     const [pets, setPets] = useState([])
     const [showAll, setShowAll] = useState(false)
     const [page, setPage] = useState(1) 
+    const [totalPets, setTotalPets] = useState(0);
+
     const limit = 4
   
     const FetchPets = async () =>{
@@ -21,11 +24,13 @@ function HomePages ({pickDate, dropDate, location}){
           dropDate,
           limit: showAll ? 8 : limit,
           location,
-          pickDate
+          pickDate,
+          page
       }})
   
       if(Array.isArray(response.data.message)){
       setPets(response.data.message)
+      setTotalPets(response.data.totalPets)
     }
       }
       catch (error) {
@@ -46,14 +51,16 @@ function HomePages ({pickDate, dropDate, location}){
               <img src={`${imageUrl}${pet.image}`} alt={pet.name} className="w-full object-cover rounded" />
               <h3 className="text-lg font-bold mt-2">{pet.name}</h3>
               <p className="text-sm">Price: ${pet.price}</p>
-              <p className="text-xs">Pick-up Date: {new Date(pet.pickup_date).toLocaleString()}</p>
+              <p className="text-xs my-2">Pick-up Date: {new Date(pet.pickup_date).toLocaleString()}</p>
               <p className="text-xs">Drop-off Date: {new Date(pet.dropoff_date).toLocaleString()}</p>
+             <Link to={`/homes/${pet.id}`}>
               <button 
                 className="bg-pink-500 text-white px-4 py-2 rounded-lg mt-3"
-                onClick={() => window.location.href = `/checkout?petId=${pet.id}`}
+                onClick={() => window.location.href = `/homes/${pet.id}`}
               >
                 Rent Now
               </button>
+              </Link>
             </div>
           ))}
         </div>
@@ -78,6 +85,7 @@ function HomePages ({pickDate, dropDate, location}){
           <button 
             className="ml-2 bg-gray-300 px-3 py-1 rounded-lg" 
             onClick={() => setPage(page + 1)}
+            disabled={page * limit >= totalPets}
           >
             +
           </button>
