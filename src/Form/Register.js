@@ -5,7 +5,7 @@ import Header from "../Layout/Header"
 import Google from "./Google"
 import Facebook from "./Facebook"
 import Apple from "./Apple"
-import Profile from "./Profile"
+import Profile from "../dashboard/Profile"
 
 const RegisterPage = () =>{
     const userRef = useRef()
@@ -25,6 +25,7 @@ const RegisterPage = () =>{
     const [loading, setLoading] = useState(false)
     const [imageFile, setImageFile] = useState(null)
     const [image, setImage] = useState(null)
+    const [success, setSuccess] = useState(false)
 
     const navigate = useNavigate()
 
@@ -33,6 +34,13 @@ const RegisterPage = () =>{
 
     }, [])
 
+    useEffect(() => {
+        if (success) {
+            console.log("Navigating to login...");
+            navigate('/login');
+        }
+    }, [success, navigate]);
+    
 
 
     const handleChange = (e) => {
@@ -45,61 +53,66 @@ const RegisterPage = () =>{
       };
        
     
-
+      const handleSubmit = async (e) => {
+        e.preventDefault();
     
+        console.log(formData.email, formData.password, formData.firstname, formData.lastname, formData.phone);
+        setLoading(true);
     
-   const handleSubmit = async (e) =>{
-
-    console.log(formData.email, formData.password, formData.firstname, formData.lastname, formData.phone)
-    setLoading(true)
-        
         const formDataToSend = new FormData();
         formDataToSend.append("firstname", formData.firstname);
         formDataToSend.append("lastname", formData.lastname);
         formDataToSend.append("email", formData.email);
         formDataToSend.append("password", formData.password);
         formDataToSend.append("phone", formData.phone);
+        
         if (image) {
-          formDataToSend.append("profile_image", image);
+            formDataToSend.append("profile_image", image);
         }
     
         try {
-          const response = await Api.post("/register.php", formDataToSend, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
+            const response = await Api.post("/register.php", formDataToSend, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
         
-          setMessage(response.data.message);
-        console.log(JSON.stringify(response?.data))
-        setFormData({
-        email:'',
-        firstname:'',
-        lastname:'',
-        password:'',
-        phone:'',
-        profile_image:null
-    })
-    navigate('/login')
-    setErrors({})
-    }
-    catch (err) {
-        console.error("Error Response:", err.response);
+            console.log("API Response:", response?.data); // Debugging API response
+            setSuccess(true);
+        
+            if (response.data.success) {
+                setMessage(response.data.message);
+                setErrors({});
+        
+                setFormData({
+                    email: '',
+                    firstname: '',
+                    lastname: '',
+                    password: '',
+                    phone: '',
+                    profile_image: null
+                });
+        
+            } else {
+                console.log("Registration failed:", response.data.message);
+                setErrors(prev => ({ ...prev, server: response.data.message || "Registration failed" }));
+            }
+        }          
+        catch (err) {
+            console.error("Error Response:", err.response);
     
-        if (!err?.response) {
-            setErrors(prev => ({...prev, server: 'No server Response'}));
-        } else if (err.response?.status === 409) {
-            setErrors(prev => ({ ...prev, server: 'Email already registered. Please use another email.' }));
-        } else if(err.response?.status === 400){
-            setErrors(prev =>({...prev, server:'Missing Username or Password'}))
+            if (!err?.response) {
+                setErrors(prev => ({ ...prev, server: 'No server response' }));
+            } else if (err.response?.status === 409) {
+                setErrors(prev => ({ ...prev, server: 'Email already registered. Please use another email.' }));
+            } else if (err.response?.status === 400) {
+                setErrors(prev => ({ ...prev, server: 'Missing required fields' }));
+            } else {
+                setErrors(prev => ({ ...prev, server: 'Registration failed. Please try again.' }));
+            }
+        } finally {
+            setLoading(false);
         }
-        else {
-            setErrors(prev => ({...prev, server: 'Registration failed. Please try again.'}));
-        }
-    }   
-        
-    finally{
-    setLoading(false)
-    }
-   }
+    };
+    
 
     const content = (
         <>
@@ -108,7 +121,7 @@ const RegisterPage = () =>{
             <div className='flex flex-column justify-center mx-auto lg:my-8 my-3 rounded-2xl border border-green-500 items-center bg-white sm:w-96  md:my-16 items-center p-10 w-72'>
             <div className="">
             
-            <form onSubmit={handleSubmit} >
+            <form onSubmit={handleSubmit} className="flex flex-col mx-auto justify-center items-center">
                 <div className="sm:mb-5 ">
                     <h1 className="sm:text-3xl text-xl text-center text-green-400 font-serif"><span className="sm:text-2xl text-xl text-black mt-5 text-center font-bold font-roboto">Create Account</span></h1>
                     <p className="text-sm text-black my-3  text-center font-roboto"> 
@@ -118,7 +131,7 @@ const RegisterPage = () =>{
                     <Facebook />
                      <Apple />
                      </div>
-                    <div className="sm:inline-flex sm:flex-nowrap flex-wrap gap-1">
+                    <div className="sm:inline-flex sm:flex-nowrap mx-auto translate-x-3 gap-1">
                     <div>
                     <p className="text-sm -mb-5 font-bold font-roboto text-black font-Cambria">
                        Firstname:
@@ -153,7 +166,7 @@ const RegisterPage = () =>{
                     />
                 </div>
                 </div>
-                <div className="">
+                <div className="translate-x-3">
                     <p className="text-sm font-roboto sm:text-sm font-bold -mb-5 text-black font-Cambria">
                         Email Address:
                     </p>
@@ -169,7 +182,7 @@ const RegisterPage = () =>{
                     autoComplete="off"
                     />
                 </div>
-                <div className="">
+                <div className="translate-x-3">
                     <p className="text-sm font-roboto sm:text-sm font-bold -mb-5 text-black font-Cambria">
                         Phone Number:
                     </p>
@@ -185,7 +198,7 @@ const RegisterPage = () =>{
                     autoComplete="off"
                     />
                 </div>
-                    <div className="">
+                    <div className="translate-x-3">
                     <p className="text-sm font-roboto font-bold -mb-5 text-black ">
                         Password:
                     </p>
@@ -256,7 +269,7 @@ const RegisterPage = () =>{
                 </button>
             </form>
             
-            {errors.server && <p className={`text-red-600 my-2` }> {errors.server} </p>}
+            {errors.server && <p className={`text-red-600 my-2 text-center text-sm` }> {errors.server} </p>}
            
             
             <p className="text-sm sm:block hidden"> Don’t have a Rover account?

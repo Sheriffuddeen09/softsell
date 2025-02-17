@@ -1,65 +1,131 @@
 import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import { Api } from "../api/axios";
+import trackone from './image/Frame 184.png'
+import tracktwo from './image/Frame 185.png'
+import trackthree from './image/Frame 186.png'
+import Order from "./Order";
 
 const OrderTracking = () => {
-  const [orders, setOrders] = useState([]);
+  const { order_id } = useParams(); // Get order_id from URL
+  const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const fetchOrder = async () => {
       try {
-        const response = await Api.get(`/tracking.php`); // Fetch all orders
+        const response = await Api.get(`/tracking.php?order_id=${order_id}`);
         const data = response.data;
         if (data.success) {
-          setOrders(data.orders); // Assume `data.orders` is an array of orders
+          setOrder(data.order); // Store order details
         }
       } catch (error) {
-        console.error("Error fetching orders:", error);
+        console.error("Error fetching order:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchOrders();
-  }, []);
+    fetchOrder();
+  }, [order_id]);
 
   if (loading) return <p className="text-center mt-6">Loading order details...</p>;
-  if (orders.length === 0) return <p className="text-center mt-6">No orders found.</p>;
+  if (!order) return <p className="text-center mt-6">Order not found.</p>;
 
-  return (
-    <div className="max-w-6xl mx-auto p-6 bg-white shadow-md rounded-lg">
-      <h2 className="text-2xl font-bold mb-4">Order Tracking</h2>
+  const content = (
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg">
+      {/* Order Tracking Progress Bar */}
+      <div className="flex justify-between items-center mb-6">
+        <img src={trackone} alt="trackicon" className="w-16 h-16" />
+        <img src={tracktwo} alt="trackicon" className="w-16 h-16" />
+        <img src={trackthree} alt="trackicon" className="w-16 h-16"/>
+      </div>
+      <div className="flex justify-center items-center mb-6 sm:block hidden">
+      <div className="flex justify-center items-center mb-6">
+          <div className="bg-pink-600 text-2xl border flex items-center border-pink-700 w-4 h-4 rounded-full "></div>
+        <div className="w-96 h-1 bg-[#23BCA8]"></div>
+        <div className="bg-pink-600 text-2xl border flex items-center border-pink-700 w-4 h-4 rounded-full "></div>
+        <div className="w-96 h-1 bg-[#23BCA8]"></div>
+        <div className="bg-pink-600 text-2xl border flex items-center border-pink-700 w-4 h-4 rounded-full "></div>
+      </div>
+      </div>
+      <div className="flex justify-between items-center mb-6">
+      <p className="sm:text-lg text-sm  font-bold">Order Placed</p>
+      <p className="sm:text-lg text-sm font-bold">On the way</p>
+      <p className="sm:text-lg text-sm font-bold">Product Delivery</p>
+      </div>
+      {/* Order Details */}
+      <div className="border rounded-lg p-6 shadow-md">
+        <h2 className="text-xl font-bold">Order ID: {order.tracking_number}</h2>
+        <p className="text-gray-600">Order Date: {order.order_date}</p>
 
-      {orders.map((order, index) => (
-        <div key={index} className="border-b pb-6 mb-6">
-          <div className="mb-4">
-            <p className="text-lg font-semibold">Tracking Number: {order.tracking_number}</p>
-            <p className="text-md text-gray-600">Payment Method: {order.payment_method}</p>
-            <p className="text-md text-gray-600">Total Price: ${order.total_price}</p>
-            <p className="text-md text-gray-600">Status: <span className="font-semibold text-blue-600">{order.status}</span></p>
+        <div className="mt-4 flex justify-between">
+        <Link to={`/invoice/${order.id}`}>
+          <button className="border px-4 py-2 text-gray-700 rounded-md">Invoice</button>
+        </Link>
+          <Link to={`/order/${order.id}`}>
+            <button className="bg-pink-600 text-white px-4 py-2 rounded-md">Track Order</button>
+          </Link>
+        </div>
+
+        <hr className="my-6" />
+
+        {/* Order Items */}
+        {order.items && order.items.length > 0 ? (
+          order.items.map((item, idx) => (
+            <div key={idx} className="flex items-start border-b pb-4 mb-4">
+              <img src={item.image} alt={item.title} className="w-20 h-20 object-cover rounded-md mr-4" />
+              <div className="flex-1">
+                <p className="font-bold">{item.title}</p>
+                <p className="text-gray-600">
+                  <span className="font-semibold">Size:</span> {item.size}
+                </p>
+                <p className="text-gray-600">
+                  <span className="font-semibold">Color:</span> {item.color}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-lg font-semibold">${item.price}</p>
+                <p className="text-gray-600">Qty: {item.quantity}</p>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p className="text-gray-500">No items found for this order.</p>
+        )}
+
+        {/* Order Summary & Need Help Section */}
+        <div className="flex justify-between mt-6 border-t pt-6">
+          {/* Need Help */}
+          <div>
+            <h3 className="text-lg font-semibold mb-2">Need Help</h3>
+            <ul className="space-y-2">
+              <li className="flex items-center text-black"><span className="mr-2 border border-2 rounded border-pink-700">📦</span> Order Issues</li>
+              <li className="flex items-center text-black"><span className="mr-2 border-2 rounded  border-pink-700">🚚</span> Delivery Info</li>
+              <li className="flex items-center text-black"><span className="mr-2 border-2 rounded  border-pink-700">↩️</span> Returns</li>
+            </ul>
           </div>
 
-          <h3 className="text-xl font-semibold mb-3">Delivery Address</h3>
-          <p className="text-gray-700">{order.address}, {order.city}, {order.state}, {order.zip_code}, {order.country}</p>
-
-          <h3 className="text-xl font-semibold mt-6 mb-3">Order Items</h3>
-          <div className="space-y-4">
-            {order.items.map((item, idx) => ( // Loop through order items
-              <div key={idx} className="flex items-center border-b pb-4">
-                <img src={item.image} alt={item.title} className="w-24 h-24 object-cover rounded-md mr-4" />
-                <div>
-                  <p className="font-bold">{item.title}</p>
-                  <p className="text-gray-600">Size: {item.size} | Color: {item.color}</p>
-                  <p className="text-gray-700">Quantity: {item.quantity}</p>
-                  <p className="text-lg font-semibold">Price: ${item.price}</p>
-                </div>
-              </div>
-            ))}
+          {/* Order Summary */}
+          <div className="text-right">
+            <h3 className="text-lg font-semibold mb-2">Order Summary</h3>
+            <p className="text-gray-600">Subtotal: <span className="font-bold">${order.subtotal}</span></p>
+            <p className="text-gray-600">Discount: <span className="font-bold">${order.discount}</span></p>
+            <p className="text-gray-600">Delivery: <span className="font-bold">${order.delivery}</span></p>
+            <p className="text-gray-600">Tax: <span className="font-bold">${order.tax}</span></p>
+            <p className="text-xl font-bold mt-2">Total: ${order.total}</p>
           </div>
         </div>
-      ))}
+      </div>
     </div>
   );
+
+  return (
+    <div>
+      {content}
+      <Order />
+    </div>
+  )
 };
 
 export default OrderTracking;

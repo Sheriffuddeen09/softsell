@@ -7,8 +7,8 @@ import colortwo from './image/Rectangle 82.png'
 import colorthird from './image/Rectangle 83.png'
 import colorfour from './image/Rectangle 84.png'
 import ReviewsPage from "./Reviews";
-import { FaCalendarAlt, FaClock } from "react-icons/fa"; // Import icons
-import Shipment from "./Shipment";
+import Shipment from "../checkout/Shipment";
+import ShopHome from "./ShopHome";
 
 const productUrl = 'http://localhost/source_code/image/'
 
@@ -215,7 +215,9 @@ function ShopPageId (){
       </div>
     </div>
         <div className="inline-flex flex-wrap gap-2 sm:gap-4 my-4 flex-wrap">
+          <Link to={'/shipment'}>
           <button className="bg-[#D2016A] p-2 sm:w-40 w-32 rounded-xl text-white text-sm hover:bg-white hover:border-pink-700 border border-pink-700 border hover:text-pink-700">Rent Now</button>
+          </Link>
           <Link to={'/inquiry'} className="border-[#D2016A]  hover:bg-pink-700 hover:text-white sm:text-center border border-2 sm:w-40 w-32 rounded-xl text-[#D2016A] bg-white"><button className="sm:text-center flex flex-col items-center justify-center mx-auto text-sm translate-y-1">Inquiry</button></Link>
         </div>
         <h1 className="font-bold id-width my-2">Queenmore Dog Sweater - <span className="text-[#D2016A]">Product Details</span></h1>
@@ -332,6 +334,7 @@ function ShopPageId (){
       </div>
 
     </div>
+    <ShopHome />
     </div>
   )
 }

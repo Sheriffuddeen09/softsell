@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import homepage1 from './homeimage/homepage1.png'
 import homepage2 from './homeimage/homepage2.png'
 import homepage3 from './homeimage/homepage3.png'
 import homepage4 from './homeimage/homepage4.png'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 const services = [
   {
@@ -53,12 +55,15 @@ const services = [
 ];
 
 const HomePagePet = () => {
+
+   
+
   return (
     <div className="p-6">
 
       {/* Services Section */}
-      <h2 className="text-center text-xl font-bold mb-4" data-aos='fade-right'>Services</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2  gap-6 " data-aos="zoom-out">
+      <h2 className="text-center text-xl font-bold mb-4"  >Services</h2>
+      <div className="grid grid-cols-1 md:grid-cols-2  gap-6 ">
         {services.map((service, index) => (
           <div
             key={index}

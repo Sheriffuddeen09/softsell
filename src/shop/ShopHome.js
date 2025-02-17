@@ -14,7 +14,7 @@ const productUrl = 'http://localhost/source_code/image/'
 
 const categories = [ {title:"Dogs", icon:Iconfour},{title:"Cats", icon:Iconone}, {title:"Pet Clothing", icon:Iconfive},{title:"Pet Carriers", icon:Icontwo},{title:"Dog & Cat Beds", icon:Iconthree}];
 
-function ShopPage (){
+function ShopHome (){
 
     const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
@@ -91,73 +91,29 @@ function ShopPage (){
       ) : products.length > 0 ?(products.map((product) => (
         <div className="relative  group">
         <div key={product.id} className="border p-4 shadow-lg sm:w-80 w-72 relative">
-        <div className="relative group">
-  {/* Product Image and Info - Clickable */}
-  <Link to={`/shop/${product.id}`} className="block relative z-10">
-    <img
-      src={`${productUrl}${product.image}`}
-      alt={product.title}
-      className="w-full h-64 object-cover cursor-pointer"
-    />
-    <h2 className="text-lg font-semibold mt-2 text-sm capitalize text-center">
-      {product.title}
-    </h2>
-    <p className="text-gray-600 text-center">${product.price}</p>
-  </Link>
-
-  {/* Hover Effect - Placed Outside Link to Avoid Blocking Click */}
-  <div className="absolute inset-0 bg-black bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl pointer-events-none"></div>
-
-  {/* Add to Cart Button - Works Normally */}
-  <button
-    onClick={() => handleAddToCart(product)}
-    className="bg-pink-500 text-white px-4 group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl hover:bg-black hover:text-white relative z-20 py-2 mt-2 w-60 mx-auto flex justify-center"
-  >
-    Add to Cart
-  </button>
-</div>
-
-
+        <Link to={`/shop/${product.id}`}>
+          <img
+            src={`${productUrl}${product.image}`} // Change URL to match your setup
+            alt={product.title}
+            className="w-full h-64 object-cover cursor-pointer"
+          />
+          <h2 className="text-lg  group-hover:opacity-100 transition-opacity font-semibold mt-2 text-sm capitalize text-center">{product.title}</h2>
+          <p className="text-gray-600 text-center  group-hover:opacity-100 transition-opacity">${product.price}</p>
+        </Link>
         </div>
-      <div className="absolute inset-0 bg-black bg-opacity-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out rounded-xl "></div>
         </div>
       ))) : (<p>No Products to display</p>)}
     </div>
   );
 
-  const categorylist = (
-    <>
-      <div className="flex w-60 scroll-wi rounded-lg mx-2 scrollb sm:scrollbar-thumb-transparent  scroll-p-0 scroll-smooth scrollbar scrollbar-thumb-blue-300  scrollbar-thin scrollbar-track-white  mx-auto my-2 gap-3">
-        {categories.map((category) => (
-          <button
-            key={category}
-            className={selectedCategory === category ? "w-52 border border-pink-400 shadow-md whitespace-nowrap sma font-bold flex flex-col justify-center items-center mx-auto bg-pink-500 hover:bg-gray-200 hover:text-black  h-16 text-white px-4  rounded" : "flex flex-col justify-center items-center sma font-bold whitespace-nowrap mx-auto px-3  h-16 rounded border hover:bg-gray-200 hover:text-black w-52 border border-pink-400 shadow-md"}
-            onClick={() => {
-              setSelectedCategory(category.title);
-              fetchProduct(category.title);
-            }}
-          >
-            <img src={category.icon} alt="icon" className="h-6 sm:h-8"/>
-            {category.title}
-          </button>
-        ))}
-      </div>
-    </>
-  )
 
   return (
     <div>
       <div className="flex flex-col items-center justify-center w-full">
-      <div className="inline-flex items-center justify-items-center gap-3 justify-center mx-auto">
-      {categorylist}
-      <img src={Iconsix} alt="icon" className="h-6 w-6 cursor-pointer" onClick={() =>{
-        setSelectedCategory('All'); fetchProduct('All')
-      }}/>
-      </div>
       {productList}
     </div>
     </div>
   )
 }
 
-export default ShopPage;
+export default ShopHome;

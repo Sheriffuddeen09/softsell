@@ -1,7 +1,7 @@
 import paypal from './image/paypal.png'
 import googlepay from './image/googlepay.png'
 import visa from './image/visa.png'
-import { Link } from 'react-router-dom'
+import GooglePayButton from "@google-pay/button-react";
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
@@ -86,28 +86,36 @@ function Payment({paymentMethod, totalPrice, onPayment}){
 
             <div className={`fixed trans top-0 flex justify-center items-center right-0 w-full h-full ${paypalView ? "block" : 'hidden'}`}>
         <div className={`sm:w-96 w-72 bg-white flex flex-col justify-center items-center h-96 rounded-xl `}>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 relative -top-40 sm:-top-36 cursor-pointer  sm:left-40 left-28" onClick={handlePayPalView}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 relative -top-40 sm:-top-32 cursor-pointer  sm:left-40 left-28" onClick={handlePayPalView}>
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
-        <PayPalScriptProvider options={{ "client-id": "YOUR_PAYPAL_CLIENT_ID" }}>
-      <PayPalButtons
-        createOrder={(data, actions) =>
-          actions.order.create({
-            purchase_units: [{ amount: { value: totalPrice.toString() } }],
-          })
-        }
-        onApprove={(data, actions) =>
-          actions.order.capture().then((details) => handlePayPalPayment(details))
-        }
-      />
+        
+    <PayPalScriptProvider options={{ "client-id": "YOUR_PAYPAL_CLIENT_ID" }}>
+      <div className="flex justify-center mt-4">
+        <div className="w-full max-w-md p-4 bg-white shadow-md rounded-lg">
+          <h2 className="text-lg font-semibold text-center mb-4">Complete Your Payment</h2>
+          <PayPalButtons
+            className="w-full" // Tailwind class for full width
+            style={{ layout: "vertical", shape: "rect" }} // Ensure proper PayPal button display
+            createOrder={(data, actions) =>
+              actions.order.create({
+                purchase_units: [{ amount: { value: totalPrice.toString() } }],
+              })
+            }
+            onApprove={(data, actions) =>
+              actions.order.capture().then((details) => handlePayPalPayment(details))
+            }
+          />
+        </div>
+      </div>
     </PayPalScriptProvider>
-            paypal
+
             </div>
             </div>
 
             <div className={`fixed trans top-0 flex justify-center items-center right-0 w-full h-full ${visaView ? "block" : 'hidden'}`}>
         <div className={`sm:w-96 w-72 bg-white flex flex-col justify-center items-center h-96 rounded-xl `}>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 relative -top-10 sm:-top-36 cursor-pointer  sm:left-40 left-28" onClick={handleVisaView}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 relative -top-10 sm:-top-14 cursor-pointer  sm:left-40 left-28" onClick={handleVisaView}>
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
         <Elements stripe={stripePromise}>
@@ -132,12 +140,47 @@ function Payment({paymentMethod, totalPrice, onPayment}){
         </div>
         <div className={`fixed trans top-0 flex justify-center items-center right-0 w-full h-full ${googleView ? "block" : 'hidden'}`}>
         <div className={`sm:w-96 w-72 bg-white flex flex-col justify-center items-center h-96 rounded-xl `}>
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 relative -top-40 sm:-top-36 cursor-pointer  sm:left-40 left-28" onClick={handleGoogleView}>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-10 relative -top-40 sm:top-6 cursor-pointer  sm:left-40 left-28" onClick={handleGoogleView}>
         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
         </svg>
-            <button className="w-full bg-gray-800 text-white py-2 rounded hover:bg-gray-900 mt-4">
-              Pay with Google Pay (Coming Soon)
-            </button>
+        <div className="flex justify-center items-center h-screen">
+      <GooglePayButton
+        environment="TEST" // Change to "PRODUCTION" for live payments
+        paymentRequest={{
+          apiVersion: 2,
+          apiVersionMinor: 0,
+          allowedPaymentMethods: [
+            {
+              type: "CARD",
+              parameters: {
+                allowedAuthMethods: ["PAN_ONLY", "CRYPTOGRAM_3DS"],
+                allowedCardNetworks: ["MASTERCARD", "VISA"],
+              },
+              tokenizationSpecification: {
+                type: "PAYMENT_GATEWAY",
+                parameters: {
+                  gateway: "stripe", // Replace with your gateway
+                  "stripe:publishableKey": "your-stripe-publishable-key",
+                },
+              },
+            },
+          ],
+          merchantInfo: {
+            merchantId: "your-merchant-id", // Required for PRODUCTION mode
+            merchantName: "Your Store Name",
+          },
+          transactionInfo: {
+            totalPriceStatus: "FINAL",
+            totalPrice: "10.00",
+            currencyCode: "USD",
+            countryCode: "US",
+          },
+        }}
+        onLoadPaymentData={(paymentRequest) => {
+          console.log("Payment Success:", paymentRequest);
+        }}
+      />
+    </div>
             </div>
         </div>
         </div>

@@ -16,7 +16,7 @@ function Shipment ({paymentMethod, totalPrice}) {
     })
     const [loading, setLoading] = useState(false)
     const [message, setMessage] = useState(false)
-
+    const [order, setOrder] = useState([])
     const navigate = useNavigate()
 
     
@@ -27,46 +27,62 @@ function Shipment ({paymentMethod, totalPrice}) {
         }))
     }
 
-    const handleSubmit = async (e) =>{
-
-        e.preventDefault()
-        setLoading(true)
-        setMessage(true)
-
-        const userId = parseInt(localStorage.getItem('user_id'), 10);
-
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        setMessage("");
+    
+        const userId = parseInt(localStorage.getItem("user_id"), 10);
+    
         if (!userId) {
             console.log("Error: User ID is missing in localStorage");
             return;
         }
-        
+
+    
         try {
-            const response = await Api.post('/checkout.php', JSON.stringify({
-                shipment: shipment,
-                user_id: userId, // Ensure it's a number
-                payment_method: paymentMethod,
-                total_price: totalPrice
-            }), {
-                headers: { 'Content-Type': 'application/json' },
-                withCredentials: true
-            });
-        
+            const response = await Api.post(
+                "/checkout.php",
+                JSON.stringify({
+                    user_id: userId,
+                    payment_method: paymentMethod,
+                    total_price: totalPrice,
+                    shipment: shipment,
+                    items: order.map((item) => ({
+                        product_id: item.product_id,
+                        image: item.image,
+                        title: item.title,
+                        price: item.price,
+                        color: item.color,
+                        size: item.size,
+                        quantity: item.quantity,
+                        pick_up_date: item.pick_up_date,
+                        pick_up_time: item.pick_up_time,
+                        drop_off_date: item.drop_off_date,
+                        drop_off_time: item.drop_off_time,
+                    })),
+                }),
+                {
+                    headers: { "Content-Type": "application/json" },
+                    withCredentials: true,
+                }
+            );
+    
             console.log("Server response:", response.data);
-        
+    
             if (response.data.success) {
                 setMessage("Your Information has been Saved");
-                navigate('/checkout');
+                navigate("/checkout");
             }
         } catch (err) {
             console.log("Invalid Data Input", err);
         }
-        
-    }
-
+    };
+    
 
     return(
         <div>
-<form onSubmit={handleSubmit} className="border w-72 border-pink-600 flex flex-col justify-center mx-auto items-center rounded ">
+<form onSubmit={handleSubmit} className="border w-72 sm:p-4 sm:w-4/12 border-pink-600 flex flex-col justify-center mx-auto items-center rounded ">
                 <div className="sm:mb-5">
                     <p className="text-sm sm:text-2xl font-bold my-2 text-black my-3"> 
                     Kindly enter your Information Details</p>

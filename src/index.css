@@ -171,7 +171,7 @@
     isolation: isolate;
   }
   .ellipse-bg {
-    background-image: url('/public/image/Ellipse\ 4.png'); /* Make sure the path is correct */
+    background-image: url('/public/image/Ellipse\ 4.png'); /* trans Make sure the path is correct */
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -279,12 +279,16 @@
   }
   .bg-homepage {
     background-image: url('/public/image/happy4.png');
-    background-position: center;
     background-repeat: no-repeat;
-    min-height: 90vh;
+    min-height: 70vh;
     margin-top: 10px;
   }
-
+  .bg-about {
+    background-image: url('/public/image/Frame\ 116.png');
+    background-repeat: no-repeat;
+    min-height: 70vh;
+    margin-top: 10px;
+  }
   .scrollb{
     scroll-snap-type: mandatory;
     overflow-x: scroll;

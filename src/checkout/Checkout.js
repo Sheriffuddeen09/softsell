@@ -16,7 +16,7 @@ function Checkout ({setOrder, order, paymentMethod, totalPrice, setTotalPrice}) 
 
     
     const [loading, setLoading] = useState(false)
-
+    const [shipment, setShipment] = useState('')
     const navigate = useNavigate()
     const calculateTotal = (items) =>{
         const total = items.reduce((acc, item) => acc + item.price * item.quantity, 0 )
@@ -106,9 +106,6 @@ function Checkout ({setOrder, order, paymentMethod, totalPrice, setTotalPrice}) 
             setTotalPrice(0)
             navigate('/payment')
         }
-        else {
-        alert("Order failed: " + response.data.message);
-      }
     } 
     catch (error) {
       console.log("Checkout error:", error);

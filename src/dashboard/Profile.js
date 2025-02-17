@@ -133,11 +133,11 @@ function Profile (){
             <button className='bg-[#FFCCEA] p-2 w-36 rounded items-center gap-2 font-bold text-[#D2016A] flex justify-center '> <img src={vectortwo} className="h-4 w-4" alt="imagevector" /> <p> My Wishlist </p>
             </button>
             </Link>
-            <Link to={'/history'} className="hidden sm:block">
+            <Link to={'/order'} className="hidden sm:block">
             <button className='bg-[#FFCCEA] p-2 w-40 rounded items-center gap-2 font-bold text-[#D2016A] flex justify-center '> <img src={vectorthree} className="h-4 w-4" alt="imagevector" /> <p> Order History </p>
             </button>
             </Link>
-            <Link to={'/help'}>
+            <Link to={'/contact'}>
             <button className='bg-[#FFCCEA] p-2 sm:w-36 w-40 rounded items-center gap-2 font-bold text-[#D2016A] flex justify-center '> <img src={vectorfour} className="h-4 w-4" alt="imagevector" /> <p> Help Center </p>
             </button>
             </Link>

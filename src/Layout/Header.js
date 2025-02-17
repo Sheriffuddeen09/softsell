@@ -1,16 +1,47 @@
-import { Link, useLocation } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import logo from './image/lo_ve-removebg-preview 1.png'
 import { useEffect, useState } from "react"
 import CountrySelect from "./CountryCode"
+import { Api } from "../api/axios"
 
-function Header ({categories, setSelectedCategory, selectedCategory, fetchProduct, cart}){
+const productUrl = 'http://localhost/source_code/image/'
+
+function Header ({categories, setSelectedCategory, selectedCategory, fetchProduct, cart, onSearch}){
 
     const [menu, setMenu] = useState(false)
-    const [drop, setDrop] = useState(false)
     const [dropWeb, setDropWeb] = useState(false)
     const [dropmobile, setDropMobile] = useState(false)
+    const [query, setQuery] = useState("");
+    const [isVisible, setIsVisible] = useState(false);
+    const [products, setProducts] = useState([]);
+    const navigate = useNavigate();
+  
+    const handleSearch = async () => {
+      if (query.trim() === "") return;
+  
 
-
+        try {
+          const response = await Api.get(`/product.php?search=${query}`);
+          console.log("API Response:", response.data); // Debugging
+        
+          if (Array.isArray(response.data.message)) {
+            setProducts(response.data.message);
+          } else {
+            setProducts([]);
+          }
+        }  catch (error) {
+        console.error("Search error:", error);
+      }
+    };
+  
+    useEffect(() => {
+      if (query.length > 1) {
+        handleSearch();
+      } else {
+        setProducts([]);
+      }
+    }, [query]);
+  
     //country
 
     const handleDropweb = () =>{
@@ -101,14 +132,70 @@ function Header ({categories, setSelectedCategory, selectedCategory, fetchProduc
       </div>
       </div>
     <div class="inline-flex sm:gap-6 mt-4 text-sm sm:mr-10 mr-5 items-center">
-      <Link to="/help" class={` hover:bg-gray-100 px-2 py-1 rounded sm:block hidden `}> 
+      <Link to="/contact" class={` hover:bg-gray-100 px-2 py-1 rounded sm:block hidden `}> 
     <p>Help Center</p>
     <div className={`${homepage === '/help' ? 'help' : null}`}></div>
     </Link>
       <p class="hover:bg-gray-100 px-2 py-1 rounded sm:block hidden"><CountrySelect /></p>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-10 hover:bg-gray-100 px-2 py-1 rounded-full">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-      </svg>
+      <button
+        onClick={() => setIsVisible(!isVisible)}
+        className="p-2 rounded-full hover:bg-gray-100"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-6 h-6"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+          />
+        </svg>
+      </button>
+      {isVisible && (
+        <div className="absolute trans fixed top-0 left-0 w-full h-full left-0 shadow-lg rounded-lg p-3 z-50">
+          {/* Search Input */}
+          <div className="flex items-center bg-white gap-2 border rounded-md p-2">
+            <input
+              type="text"
+              placeholder="Search products..."
+              className="w-full outline-none"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button
+              onClick={handleSearch}
+              className="px-4 py-2 bg-blue-500 text-white rounded-md"
+            >
+              Search
+            </button>
+          </div>
+
+          {/* Search Results */}
+          { products.length > 0 ? (
+            <ul onClick={() => setIsVisible(!isVisible)} className="mt-2 h-full overflow-auto bg-white border-t">
+              {products.map((product) => (
+                <li
+                  key={product.id}
+                  className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-3"
+                  onClick={() => navigate(`/shop/${product.id}`)}
+                >
+                  <img
+                    src={`${productUrl}${product.image}`}
+                    alt={product.title}
+                    className="w-10 h-10 rounded-md"
+                  />
+                  <span className="text-sm">{product.title}</span>
+                </li>
+              ))}
+            </ul>
+          ): (<p>No Products to display</p>)}
+        </div>
+      )}
       <Link to={'/dashboard'}>
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class={`size-10 hover:bg-gray-100 px-2 py-1 rounded-full ${` ${homepage === '/dashboard' ? 'user' : null}`}`}>
         <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
@@ -158,7 +245,7 @@ function Header ({categories, setSelectedCategory, selectedCategory, fetchProduc
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
         <Link to={'/help'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded" onClick={handleMenu}>Help Center</p></Link>
         <div className="sm:w-80 w-48 flex justify-center items-center mx-auto bg-gray-200 h-0.5 mb-0 "></div>
-        <Link to={'/country'} className="text-black"><p className="text-black hover:bg-gray-100 px-5 font-bold text-sm py-1 rounded" onClick={handleMenu}>country</p></Link>
+        <p class="hover:bg-gray-100 px-2 py-1 rounded sm:hidden block"><CountrySelect /></p>
         </div>
         </div>
         <div onClick={handleMenu} className={`fixed z-10 top-60 w-40 left-4 z-10 sm:hidden block bg-white shadow-md rounded ${dropmobile ? 'block' :'hidden'}`}>

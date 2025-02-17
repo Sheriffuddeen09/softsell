@@ -4,8 +4,8 @@ import LoginPage from "./Form/LoginPage";
 import Protected from "./Form/Protected";
 import RegisterPage from "./Form/Register";
 import ResetPassword from "./Form/Reset_Password";
-import ChangeResetPassword from "./Form/ChangeResetPassword";
-import Profile from "./Form/Profile";
+import ChangeResetPassword from "./dashboard/ChangeResetPassword";
+import Profile from "./dashboard/Profile";
 import ShopPage from "./shop/ShopPage";
 import About from "./component/About";
 import Blogs from "./component/Blogs";
@@ -14,7 +14,7 @@ import Inquiry from "./component/Inquiry";
 import Contact from "./component/Contact";
 import HomePage from "./component/HomePage";
 import Cart from "./cart/Cart";
-import EditProfile from "./Form/EditProfile";
+import EditProfile from "./dashboard/EditProfile";
 import Category from "./category/Category";
 import Header from "./Layout/Header";
 import { Elements } from "@stripe/react-stripe-js";
@@ -22,40 +22,36 @@ import { loadStripe } from "@stripe/stripe-js";
 
 import { useEffect, useState } from "react"
 import { Api } from "./api/axios";
-
-import AOS from 'aos'
-import 'aos/dist/aos.css'
 import ShopPageId from "./shop/ShopPageId";
 import HomePageId from "./component/HomePageId";
 import HomesPageId from "./component/HomesPageId";
 import CategoryId from "./category/CategoryId";
-import Shipment from "./shop/Shipment";
-import Checkout from "./shop/Checkout";
+import Shipment from "./checkout/Shipment";
+import Checkout from "./checkout/Checkout";
 import Payment from "./payment/Payment";
 import OrderTracking from "./tracking/OrderTrack";
 import Notifications from "./notification/Notification";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import OrderHistory from "./tracking/OrderHistory";
+import Invoice from "./tracking/Invoice";
 
 
    
 function App() {
 
   const stripePromise = loadStripe("your-stripe-public-key");
-  
-  useEffect(() =>{
-    AOS.init({duration: 2000})
-}, [])
+
 
 
   const categories = [ {title:"Dogs"},{title:"Cats"}, {title:"Pet Clothing"},{title:"Pet Carriers"},{title:"Dog & Cat Beds"}];
 
 
-  const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [error, setError] = useState({})
     const [loading, setLoading] = useState(false)
     const [cart, setCart] = useState([])
-
+    
 
     const [order, setOrder] = useState([])
     const [paymentMethod, setPaymentMethod] = useState('')
@@ -136,7 +132,7 @@ function App() {
 
   return (
     <div className="">
-      <Header fetchProduct={fetchProduct} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} cart={cart} />
+      <Header fetchProduct={fetchProduct} onSearch={fetchProduct} selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} categories={categories} cart={cart} />
       <Routes>
 
         {/* register */}
@@ -266,7 +262,7 @@ function App() {
 
       <Route path="/checkout" element={
         <Protected>
-        <Checkout totalPrice={totalPrice} setTotalPrice={setTotalPrice} paymentMethod={paymentMethod} order={order} setOrder={setOrder} />
+        <Checkout totalPrice={totalPrice} setTotalPrice={setTotalPrice} paymentMethod={paymentMethod} order={order} setOrder={setOrder} ship />
         </Protected>
       } />
 
@@ -283,11 +279,29 @@ function App() {
 
       } />
 
-      {/* OrderTracking */}
+      {/* OrderHistory */}
 
       <Route path="/order" element={
          <Protected>
+          <OrderHistory />
+         </Protected>
+      } />
+
+
+      {/* OrderTracking */}
+
+      <Route path="/order/:order_id" element={
+         <Protected>
           <OrderTracking />
+         </Protected>
+      } />
+
+      {/* Invoice */}
+
+
+    <Route path="/invoice/:order_id" element={
+         <Protected>
+          <Invoice />
          </Protected>
       } />
 
